@@ -10,6 +10,12 @@ This repo puts it back: **24 skills** (and counting) that teach your agent to re
 
 ---
 
+<video src="media/cinematic-motion-demo.mp4" controls muted playsinline poster="media/cinematic-motion-poster.png"></video>
+
+*The same brief, built twice: a default agent, then the `cinematic-motion` skill. 39 seconds, one cut — full film in `media/` (2.1 MB).*
+
+---
+
 ## Don't take our word for it
 
 Open these side by side in a browser. Same product, same copy, same sections — one built by a default agent, one built with `design-taste` loaded:
@@ -44,12 +50,6 @@ Five seconds, no tutorial needed. That's the whole pitch.
 | [`neo-brutalism`](skills/neo-brutalism/SKILL.md) | Loud consumer web: every element ink-bordered, 6px hard shadows, one hot + one cool accent, chunky pills, confident copy | [`neo-brutalism.html`](examples/neo-brutalism.html) |
 | [`corporate-trust`](skills/corporate-trust/SKILL.md) | Trust-first enterprise: white, one deep-blue accent, system type, evidence tables, compliance chips, restraint as the brand | [`corporate-trust.html`](examples/corporate-trust.html) |
 | [`cinematic-motion`](skills/cinematic-motion/SKILL.md) | Site-of-the-day: the page as a film on studio print — paper canvas, ink type, one electric blue, alternating scene canvases, live product screen, scrubbed index counter, drag carousel, roadmap pin | [`cinematic-motion.html`](examples/cinematic-motion.html) |
-
-The flagship demo on film — the same brief captured twice: default agent output, then the `cinematic-motion` skill:
-
-<video src="media/cinematic-motion-demo.mp4" controls muted playsinline poster="media/cinematic-motion-poster.png"></video>
-
-`media/cinematic-motion-demo.mp4` — 39s, before → after, one cut.
 
 ### Craft skills (reference-grade rules, stack on any pack)
 
