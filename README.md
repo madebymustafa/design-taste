@@ -12,7 +12,7 @@ This repo puts it back: **24 skills** (and counting) that teach your agent to re
 
 ![The same brief, built twice — a default agent, then the cinematic-motion skill.](media/cinematic-motion-demo.gif)
 
-*The same brief, built twice: a default agent, then the `cinematic-motion` skill. The trailer above loops the full arc — the complete 39s film is [▶ one click away (mp4, 2.1 MB)](https://raw.githubusercontent.com/madebymustafa/design-taste/main/media/cinematic-motion-demo.mp4).*
+*Same brief, twice: a default agent — then the `cinematic-motion` skill. 39 seconds, one cut. [▶ Full film](https://raw.githubusercontent.com/madebymustafa/design-taste/main/media/cinematic-motion-demo.mp4)*
 
 ---
 
@@ -79,7 +79,7 @@ Five seconds, no tutorial needed. That's the whole pitch.
 ## Install (5 seconds)
 
 ```bash
-git clone https://github.com/<you>/design-taste.git
+git clone https://github.com/madebymustafa/design-taste.git
 cd design-taste
 ./scripts/install.sh              # installs all 24 skills to every agent it finds
 ```
@@ -96,7 +96,7 @@ Or manually — copy the `skills/*` folders into your agent's skills directory:
 
 See [docs/INSTALL.md](docs/INSTALL.md) for details. To check your install: `./scripts/validate.sh` — every skill must pass before a release.
 
-*Why this exists, and the honest bet we're making:* the same brief rendered ten ways in [gallery/README.md](gallery/README.md) is the whole argument — taste is instructions, and instructions ship.
+*The whole argument is ten takes on one brief — [gallery/README.md](gallery/README.md). Taste is instructions, and instructions ship.*
 
 ## Repo layout
 
@@ -127,8 +127,8 @@ And the whole family on one board — same brief, ten identities:
 
 ## License
 
-MIT. Use it, fork it, sell the output — just don't claim you made the taste.
+MIT. Fork it, remix it, ship with it — that's the whole point. If you make something people notice, tell them how.
 
 ---
 
-*Built by a designer. If the examples look intentional, that's the point.*
+*Made by a designer who doesn't think AI has to be boring. The skills are free; so is the opinion.*
