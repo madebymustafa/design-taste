@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skittie — Product analytics for indie founders</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F5F1EA;
+    --paper-deep: #EFEAE1;
+    --ink: #1A1A18;
+    --ink-soft: #6B675E;
+    --accent: #E34A2B;
+    --hairline: rgba(26, 26, 24, 0.14);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Georgia, 'Times New Roman', serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .serif-display { font-family: 'Fraunces', Georgia, serif; }
+
+  .container { max-width: 1180px; margin: 0 auto; padding: 0 40px; }
+  @media (max-width: 760px) { .container { padding: 0 22px; } }
+
+  nav { border-bottom: 1px solid var(--hairline); }
+  .nav-inner { display: flex; justify-content: space-between; align-items: center; height: 72px; }
+  .wordmark { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 500; letter-spacing: -0.01em; }
+  .wordmark sup { font-size: 9px; vertical-align: super; }
+  .nav-links { display: flex; gap: 40px; }
+  .nav-links a {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.14em; color: var(--ink); text-decoration: none; padding: 4px 0;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.14em; background: var(--ink); color: var(--paper);
+    border: none; padding: 14px 22px; cursor: pointer; border-radius: 0;
+  }
+  .nav-cta:hover { background: var(--accent); }
+
+  header { padding: 128px 0 96px; }
+  .hero-grid { display: grid; grid-template-columns: 7fr 5fr; column-gap: 56px; }
+  .kicker { color: var(--accent); margin-bottom: 28px; }
+  .kicker::before { content: '— '; }
+  h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: clamp(2.9rem, 7vw, 6.2rem);
+    font-weight: 400;
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+  }
+  .hero-sub {
+    margin-top: 40px; font-size: 18px; line-height: 1.65; color: var(--ink);
+    max-width: 30em; font-family: Georgia, serif;
+  }
+  .hero-actions { margin-top: 48px; display: flex; align-items: center; gap: 32px; }
+  .cta-solid {
+    background: var(--accent); color: var(--paper);
+    border: none; padding: 18px 34px; cursor: pointer; border-radius: 0;
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px; text-transform: uppercase; letter-spacing: 0.14em;
+  }
+  .cta-solid:hover { background: var(--ink); }
+  .cta-text {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.14em; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--ink);
+    padding-bottom: 4px;
+  }
+  .cta-text:hover { color: var(--accent); border-color: var(--accent); }
+
+  .hero-index { border-left: 1px solid var(--hairline); padding-left: 40px; display: flex; flex-direction: column; justify-content: flex-end; gap: 12px; }
+  .hero-index-line { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--hairline); padding: 13px 0; }
+  .metric-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-soft); }
+  .metric-value { font-family: 'Fraunces', serif; font-size: 34px; font-weight: 300; }
+  .metric-note { font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); }
+
+  .logos { border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); padding: 26px 0; }
+  .logos-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 18px; }
+  .logos-label { color: var(--ink-soft); }
+  .logos-row { display: flex; gap: 44px; }
+  .logos-row span { font-family: 'Fraunces', serif; font-size: 17px; color: var(--ink); opacity: 0.75; }
+
+  section.section { border-bottom: 1px solid var(--hairline); }
+  .section-head { padding: 96px 0 56px; display: grid; grid-template-columns: 5fr 7fr; column-gap: 56px; align-items: end; }
+  .section-num { color: var(--accent); margin-bottom: 18px; }
+  .section-head h2 { font-family: 'Fraunces', serif; font-weight: 400; font-size: clamp(2rem, 4vw, 3.4rem); line-height: 1.02; letter-spacing: -0.015em; }
+  .section-manifest { font-size: 17px; line-height: 1.6; color: var(--ink); max-width: 32em; font-family: Georgia, serif; }
+
+  .feature-row { display: grid; grid-template-columns: 80px 4fr 7fr; column-gap: 40px; padding: 36px 0; border-top: 1px solid var(--hairline); align-items: baseline; }
+  .feature-row:last-child { border-bottom: 1px solid var(--hairline); }
+  .feature-count { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--accent); }
+  .feature-name { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 400; }
+  .feature-desc { font-size: 15.5px; line-height: 1.6; color: var(--ink-soft); max-width: 42em; font-family: Georgia, serif; }
+
+  .quote-block { padding: 120px 0; }
+  .quote-mark { color: var(--accent); font-family: 'Fraunces', serif; font-size: 22px; margin-bottom: 28px; }
+  .quote-block blockquote {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+    font-size: clamp(1.7rem, 3.6vw, 3rem); line-height: 1.25; letter-spacing: -0.01em;
+    max-width: 24em;
+  }
+  .quote-attribution { margin-top: 44px; display: flex; gap: 24px; align-items: center; }
+  .quote-attribution .mono { color: var(--ink-soft); }
+  .quote-rule { width: 64px; height: 1px; background: var(--accent); }
+
+  .price-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--hairline); }
+  .price-col { padding: 44px 36px 56px; border-left: 1px solid var(--hairline); }
+  .price-col:first-child { border-left: none; padding-left: 0; }
+  .price-col.featured { background: var(--paper-deep); }
+  .price-name { margin-bottom: 36px; }
+  .price-amount { font-family: 'Fraunces', serif; font-size: 54px; font-weight: 300; letter-spacing: -0.02em; }
+  .price-per { font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-soft); margin-top: 6px; }
+  .price-feature { padding: 13px 0; border-top: 1px solid var(--hairline); font-size: 15px; }
+  .price-feature:last-of-type { border-bottom: 1px solid var(--hairline); }
+  .price-cta { margin-top: 40px; display: block; text-align: left; }
+
+  .final-cta { padding: 140px 0; text-align: center; }
+  .final-cta .kicker { margin-bottom: 20px; }
+  .final-cta h2 {
+    font-family: 'Fraunces', serif; font-weight: 400; font-size: clamp(2.4rem, 5.5vw, 4.6rem);
+    line-height: 1.0; letter-spacing: -0.02em; max-width: 18em; margin: 0 auto 48px;
+  }
+  .final-cta .cta-solid { font-size: 13px; padding: 20px 44px; }
+
+  footer { border-top: 1px solid var(--hairline); padding: 44px 0 64px; }
+  .footer-top { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 24px; align-items: baseline; }
+  .footer-links { display: flex; gap: 36px; }
+  .footer-links a {
+    font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; text-transform: uppercase;
+    letter-spacing: 0.14em; color: var(--ink-soft); text-decoration: none;
+  }
+  .footer-links a:hover { color: var(--accent); }
+  .footer-bottom { margin-top: 56px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; color: var(--ink-soft); font-size: 10px; letter-spacing: 0.1em; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-inner">
+    <div class="wordmark">Skittie<sup>®</sup></div>
+    <div class="nav-links">
+      <a href="#features">01 — Features</a>
+      <a href="#pricing">02 — Pricing</a>
+      <a href="#">Journal</a>
+    </div>
+    <button class="nav-cta">Start free</button>
+  </div>
+</nav>
+
+<header>
+  <div class="container hero-grid">
+    <div>
+      <p class="kicker mono">Analytics for founders, not data teams</p>
+      <h1 class="serif-display">Know exactly <em>what</em> your users do.</h1>
+      <p class="hero-sub">Funnels, cohorts and session replay for independent products — the clarity of a data team without the schema, the SQL, or the second mortgage.</p>
+      <div class="hero-actions">
+        <button class="cta-solid">Start free trial</button>
+        <a class="cta-text" href="#pricing">Book a demo →</a>
+      </div>
+    </div>
+    <div class="hero-index">
+      <div class="hero-index-line">
+        <span class="metric-label">Trial → Paid</span>
+        <span class="metric-value">18.4%</span>
+      </div>
+      <div class="hero-index-line">
+        <span class="metric-label">Median time to value</span>
+        <span class="metric-value">9 min</span>
+      </div>
+      <div class="hero-index-line">
+        <span class="metric-label">Churn, 90 days</span>
+        <span class="metric-value">2.1%</span>
+      </div>
+      <p class="metric-note">— live data, no queries written</p>
+    </div>
+  </div>
+</header>
+
+<div class="logos">
+  <div class="container logos-inner">
+    <div class="logos-label mono">Trusted by 4,000+ indie teams</div>
+    <div class="logos-row">
+      <span><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M12 3L21 19H3Z"/></svg>Acme</span><span><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M3 16a9 9 0 0 1 18 0h-3a6 6 0 0 0-12 0z"/></svg>Fathom</span><span><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M4 8h5v2H4zM4 14h8v2H4zM4 20h12v2H4z"/></svg>Baseline</span><span><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zm0 3.5a5 5 0 1 1 0 10 5 5 0 0 1 0-10z"/><path d="M12 10.8a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4z"/></svg>Radar</span><span><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M9 5h3.5L21 12l-8.5 7H9l8.5-7z"/></svg>Promptly</span>
+    </div>
+  </div>
+</div>
+
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="section-num mono">01 — Approach</p>
+        <h2>Everything you need to grow</h2>
+      </div>
+      <p class="section-manifest">Three instruments, one language: no event schemas to design, no pipelines to babysit. Point it at your product and it starts reporting.</p>
+    </div>
+
+    <div class="feature-row">
+      <span class="feature-count">01</span>
+      <h3 class="feature-name">Real-time funnels</h3>
+      <p class="feature-desc">See where users drop off at every step, live. Funnels that read like questions, not config screens.</p>
+    </div>
+    <div class="feature-row">
+      <span class="feature-count">02</span>
+      <h3 class="feature-name">Session replay</h3>
+      <p class="feature-desc">Recordings of real sessions, watched the way you'd review footage — to find the friction no chart will show you.</p>
+    </div>
+    <div class="feature-row">
+      <span class="feature-count">03</span>
+      <h3 class="feature-name">Smart cohorts</h3>
+      <p class="feature-desc">Slice by acquisition channel, plan, or behavior — instant, and typed in English.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container quote-block">
+    <p class="quote-mark">«</p>
+    <blockquote>We found the exact step where users churned in a fifteen-minute session. Skittie paid for itself in one afternoon.</blockquote>
+    <div class="quote-attribution">
+      <span class="quote-rule"></span>
+      <span class="mono">Sarah Chen — founder, Stitchboard</span>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="pricing">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="section-num mono">02 — Pricing</p>
+        <h2>Simple pricing</h2>
+      </div>
+      <p class="section-manifest">Free to start, fair as you grow. No per-seat theater, no hidden events line.</p>
+    </div>
+
+    <div class="price-grid">
+      <div class="price-col">
+        <p class="price-name mono">Starter</p>
+        <p class="price-amount">$0</p>
+        <p class="price-per">per month</p>
+        <div style="height:24px"></div>
+        <p class="price-feature">One project</p>
+        <p class="price-feature">10k events / month</p>
+        <p class="price-feature">7-day retention</p>
+        <button class="cta-solid price-cta">Get started</button>
+      </div>
+      <div class="price-col featured">
+        <p class="price-name mono">Pro — most popular</p>
+        <p class="price-amount">$29</p>
+        <p class="price-per">per month</p>
+        <div style="height:24px"></div>
+        <p class="price-feature">Ten projects</p>
+        <p class="price-feature">500k events / month</p>
+        <p class="price-feature">Unlimited retention</p>
+        <p class="price-feature">Session replay</p>
+        <button class="cta-solid price-cta">Start 14-day trial</button>
+      </div>
+      <div class="price-col">
+        <p class="price-name mono">Scale</p>
+        <p class="price-amount">$99</p>
+        <p class="price-per">per month</p>
+        <div style="height:24px"></div>
+        <p class="price-feature">Unlimited projects</p>
+        <p class="price-feature">5M events / month</p>
+        <p class="price-feature">SSO & audit log</p>
+        <p class="price-feature">Priority support</p>
+        <button class="cta-solid price-cta">Contact sales</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta">
+  <p class="kicker mono">No credit card. No data team.</p>
+  <h2>Stop guessing. Start knowing.</h2>
+  <button class="cta-solid">Start your free trial →</button>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="wordmark">Skittie<sup>®</sup></div>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Status</a>
+        <a href="#">Journal</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Skittie Analytics — No. 014, Indie Instruments</span>
+      <span>Set in Fraunces &amp; IBM Plex Mono</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

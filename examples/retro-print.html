@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skittie — Product analytics for indie founders</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F4EDDE;
+    --paper-deep: #EBE2CF;
+    --ink: #21201C;
+    --red: #E4572E;
+    --blue: #355E8C;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: 'Newsreader', Georgia, serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px; font-weight: 500; }
+  ol, ul { list-style: none; }
+  .container { max-width: 1180px; margin: 0 auto; padding: 0 40px; }
+  @media (max-width: 760px) { .container { padding: 0 22px; } }
+
+  nav { border-bottom: 2px solid var(--ink); }
+  .nav-inner { display: flex; justify-content: space-between; align-items: center; height: 66px; }
+  .wordmark { font-family: 'Anton', sans-serif; font-size: 22px; letter-spacing: 0.02em; text-transform: uppercase; }
+  .wordmark .red { color: var(--red); }
+  .nav-links { display: flex; gap: 34px; }
+  .nav-links a { text-decoration: none; color: var(--ink); font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .nav-links a:hover { color: var(--red); }
+  .nav-stamp {
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em;
+    border: 1.5px dashed var(--ink); border-radius: 999px; padding: 7px 16px; transform: rotate(-1.5deg);
+  }
+
+  header { padding: 90px 0 0; border-bottom: 2px solid var(--ink); }
+  .kicker-tape {
+    display: inline-block; background: var(--blue); color: var(--paper);
+    font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.14em;
+    padding: 8px 16px; transform: rotate(-1deg); margin-bottom: 40px;
+  }
+  h1 {
+    font-family: 'Anton', sans-serif; font-weight: 400;
+    font-size: clamp(3rem, 8.5vw, 7rem); line-height: 0.98; letter-spacing: 0.005em;
+    text-transform: uppercase; text-shadow: 3px 3px 0 var(--red);
+    max-width: 12em;
+  }
+  .hero-grid { display: grid; grid-template-columns: 7fr 5fr; column-gap: 48px; padding: 40px 0 72px; align-items: end; }
+  .hero-sub { font-size: 17px; line-height: 1.65; color: var(--ink); max-width: 30em; }
+  .hero-sub .red { color: var(--red); }
+  .hero-actions { margin-top: 40px; display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+  .cta-solid {
+    background: var(--ink); color: var(--paper); border: 2px solid var(--ink);
+    padding: 16px 30px; cursor: pointer; font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .cta-solid:hover { background: var(--red); border-color: var(--red); }
+  .cta-text { text-decoration: none; color: var(--ink); font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 2px solid var(--blue); padding-bottom: 3px; }
+  .cta-text:hover { color: var(--red); border-color: var(--red); }
+  .colophon { margin-top: 44px; color: var(--ink); opacity: 0.8; }
+
+  .halftone-strip {
+    padding: 40px 0;
+    background-image: radial-gradient(var(--red) 1.3px, transparent 1.4px);
+    background-size: 11px 11px;
+  }
+  .halftone-strip .container { display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 40px; }
+  .metric-cell .num {
+    font-family: 'Anton', sans-serif; font-size: 44px; text-transform: uppercase;
+    color: var(--red); display: block;
+  }
+  .metric-cell .label { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .metric-cell .note { font-family: 'IBM Plex Mono', monospace; font-size: 10px; margin-top: 6px; opacity: 0.75; }
+
+  .logos { border-bottom: 2px solid var(--ink); padding: 22px 0; }
+  .logos-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  .logos-name { font-family: 'Anton', sans-serif; font-size: 17px; text-transform: uppercase; letter-spacing: 0.03em; opacity: 0.85; }
+
+  section.section { border-bottom: 2px solid var(--ink); }
+  .section-head { padding: 80px 0 40px; display: flex; justify-content: space-between; align-items: end; gap: 40px; flex-wrap: wrap; }
+  .section-head h2 { font-family: 'Anton', sans-serif; font-weight: 400; text-transform: uppercase; font-size: clamp(1.8rem, 4vw, 3rem); line-height: 1.0; text-shadow: 2px 2px 0 var(--red); }
+  .section-mark { font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--blue); }
+
+  .feature-row { display: grid; grid-template-columns: 110px 3fr 6fr; column-gap: 32px; padding: 30px 0; border-top: 1.5px solid var(--ink); align-items: baseline; }
+  .feature-row:last-child { border-bottom: 1.5px solid var(--ink); }
+  .feature-no { font-family: 'Anton', sans-serif; font-size: 30px; color: var(--red); }
+  .feature-name { font-family: 'Anton', sans-serif; text-transform: uppercase; font-size: 19px; letter-spacing: 0.02em; }
+  .feature-desc { font-size: 15.5px; line-height: 1.65; max-width: 42em; }
+
+  .quote-block { padding: 90px 0; display: grid; grid-template-columns: 3fr 1fr; gap: 48px; align-items: end; }
+  .quote-block blockquote { font-family: 'Newsreader', serif; font-size: clamp(1.7rem, 3.2vw, 2.5rem); line-height: 1.25; }
+  .quote-block blockquote .hl { background: var(--blue); color: var(--paper); padding: 0 6px; }
+  .quote-mark { justify-self: end; }
+  .quote-mark .stamp {
+    font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.12em;
+    border: 1.5px dashed var(--blue); border-radius: 999px; padding: 9px 18px; transform: rotate(2deg); text-align: center; line-height: 1.7;
+  }
+
+  .price-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 2px solid var(--ink); }
+  .price-col { padding: 42px 32px 54px; border-left: 2px solid var(--ink); }
+  .price-col:first-child { border-left: none; padding-left: 0; }
+  .price-col.featured { background: var(--ink); color: var(--paper); }
+  .price-name { font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 26px; }
+  .price-amount { font-family: 'Anton', sans-serif; font-size: 50px; text-transform: uppercase; }
+  .price-per { font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 6px; opacity: 0.75; }
+  .price-feature { padding: 13px 0; border-top: 1.5px solid currentColor; opacity: 0.9; font-size: 15px; }
+  .price-feature:last-of-type { border-bottom: 1.5px solid currentColor; }
+  .price-cta { margin-top: 34px; }
+  .price-col.featured .cta-solid { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+  .price-col.featured .cta-solid:hover { background: var(--red); border-color: var(--red); color: var(--paper); }
+
+  .final-cta { padding: 110px 0; }
+  .final-cta h2 { font-family: 'Anton', sans-serif; font-weight: 400; text-transform: uppercase; font-size: clamp(2.4rem, 6vw, 4.8rem); line-height: 0.98; max-width: 13em; margin: 0 auto 42px; text-align: center; text-shadow: 3px 3px 0 var(--red); }
+  .final-cta .cta-wrap { text-align: center; }
+  .final-cta .cta-solid { font-size: 13px; padding: 20px 44px; }
+
+  footer { border-top: 2px solid var(--ink); padding: 34px 0 54px; }
+  .footer-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; align-items: center; }
+  .footer-links { display: flex; gap: 30px; }
+  .footer-links a { text-decoration: none; color: var(--ink); font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .footer-links a:hover { color: var(--red); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-inner">
+    <div class="wordmark">Skitt<span class="red">ie</span></div>
+    <div class="nav-links">
+      <a href="#features">01 — FEATURES</a>
+      <a href="#pricing">02 — PRICING</a>
+      <a href="#">03 — JOURNAL</a>
+    </div>
+    <span class="nav-stamp">VOL. 02</span>
+  </div>
+</nav>
+
+<header>
+  <div class="container">
+    <span class="kicker-tape">Analytics for founders, not data teams</span>
+    <h1>Know exactly what your users do.</h1>
+    <div class="hero-grid">
+      <div>
+        <p class="hero-sub">Funnels, cohorts and session replay for independent products — the clarity of a data team without the schema, the SQL, or the second mortgage.</p>
+        <div class="hero-actions">
+          <button class="cta-solid">Start free trial</button>
+          <a class="cta-text" href="#pricing">Book a demo →</a>
+        </div>
+        <p class="colophon mono">SET IN ANTON, NEWSREADER &amp; IBM PLEX MONO — PRINTED ON 100% RECYCLED PIXELS</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="halftone-strip">
+  <div class="container">
+    <div class="metric-cell">
+      <span class="num">18.4%</span>
+      <span class="label">Trial → Paid</span>
+      <span class="note">— live, no queries written</span>
+    </div>
+    <div class="metric-cell">
+      <span class="num">9 MIN</span>
+      <span class="label">Median time to value</span>
+      <span class="note">— among 4,120 teams</span>
+    </div>
+    <div class="metric-cell">
+      <span class="num">2.1%</span>
+      <span class="label">Churn · 90 days</span>
+      <span class="note">— all paid plans</span>
+    </div>
+  </div>
+</div>
+
+<div class="logos">
+  <div class="container logos-inner">
+    <span class="mono">Trusted by 4,000+ indie teams</span>
+    <div style="display:flex;gap:30px;flex-wrap:wrap">
+      <span class="logos-name"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:6px" aria-hidden="true"><path d="M12 3L21 19H3Z"/></svg>Acme</span>
+      <span class="logos-name"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:6px" aria-hidden="true"><path d="M3 16a9 9 0 0 1 18 0h-3a6 6 0 0 0-12 0z"/></svg>Fathom</span>
+      <span class="logos-name"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:6px" aria-hidden="true"><path d="M4 8h5v2H4zM4 14h8v2H4zM4 20h12v2H4z"/></svg>Baseline</span>
+      <span class="logos-name"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:6px" aria-hidden="true"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zm0 3.5a5 5 0 1 1 0 10 5 5 0 0 1 0-10z"/><path d="M12 10.8a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4z"/></svg>Radar</span>
+      <span class="logos-name"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:6px" aria-hidden="true"><path d="M9 5h3.5L21 12l-8.5 7H9l8.5-7z"/></svg>Promptly</span>
+    </div>
+  </div>
+</div>
+
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-head">
+      <h2>Everything you need to grow</h2>
+      <span class="section-mark">✳ THREE INSTRUMENTS, ONE LANGUAGE</span>
+    </div>
+    <div class="feature-row">
+      <span class="feature-no">01</span>
+      <h3 class="feature-name">Real-time funnels</h3>
+      <p class="feature-desc">See where users drop off at every step, live. Funnels that read like questions, not configuration screens.</p>
+    </div>
+    <div class="feature-row">
+      <span class="feature-no">02</span>
+      <h3 class="feature-name">Session replay</h3>
+      <p class="feature-desc">Recordings of real sessions, watched the way you'd review footage — to find the friction no chart will show you.</p>
+    </div>
+    <div class="feature-row">
+      <span class="feature-no">03</span>
+      <h3 class="feature-name">Smart cohorts</h3>
+      <p class="feature-desc">Slice by acquisition channel, plan, or behavior — instant, and typed in plain English.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container quote-block">
+    <blockquote>“We found the exact step where users churned in <span class="hl">fifteen minutes</span>. Skittie paid for itself in one afternoon.”</blockquote>
+    <div class="quote-mark">
+      <span class="stamp">SARAH CHEN<br>FOUNDER, STITCHBOARD<br>✳</span>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="pricing">
+  <div class="container">
+    <div class="section-head">
+      <h2>Simple pricing</h2>
+      <span class="section-mark">◆ NO PER-SEAT THEATER</span>
+    </div>
+    <div class="price-grid">
+      <div class="price-col">
+        <p class="price-name">Starter</p>
+        <p class="price-amount">$0</p>
+        <p class="price-per">per month</p>
+        <div style="height:20px"></div>
+        <p class="price-feature">One project</p>
+        <p class="price-feature">10k events / month</p>
+        <p class="price-feature">7-day retention</p>
+        <button class="cta-solid price-cta">Get started</button>
+      </div>
+      <div class="price-col featured">
+        <p class="price-name">Pro — most popular</p>
+        <p class="price-amount">$29</p>
+        <p class="price-per">per month</p>
+        <div style="height:20px"></div>
+        <p class="price-feature">Ten projects</p>
+        <p class="price-feature">500k events / month</p>
+        <p class="price-feature">Unlimited retention</p>
+        <p class="price-feature">Session replay</p>
+        <button class="cta-solid price-cta">Start 14-day trial</button>
+      </div>
+      <div class="price-col">
+        <p class="price-name">Scale</p>
+        <p class="price-amount">$99</p>
+        <p class="price-per">per month</p>
+        <div style="height:20px"></div>
+        <p class="price-feature">Unlimited projects</p>
+        <p class="price-feature">5M events / month</p>
+        <p class="price-feature">SSO & audit log</p>
+        <p class="price-feature">Priority support</p>
+        <button class="cta-solid price-cta">Contact sales</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta">
+  <h2>Stop guessing.<br>Start knowing.</h2>
+  <div class="cta-wrap">
+    <button class="cta-solid">Start your free trial →</button>
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-inner">
+    <div class="wordmark" style="font-size:15px">Skitt<span class="red">ie</span></div>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Status</a>
+      <a href="#">Journal</a>
+    </div>
+    <span class="mono">© 2026 — printed in three colors</span>
+  </div>
+</footer>
+
+</body>
+</html>

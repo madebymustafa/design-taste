@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skittie — Product analytics for indie founders</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: #0f172a;
+    background: #ffffff;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .nav-inner { display: flex; justify-content: space-between; align-items: center; height: 64px; }
+  .logo { font-weight: 800; font-size: 18px; color: #0f172a; }
+  .logo span { color: #6366f1; }
+  .nav-links { display: flex; gap: 28px; font-size: 14px; font-weight: 500; color: #475569; }
+  .nav-cta {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff; border: none; padding: 10px 20px; border-radius: 8px;
+    font-weight: 600; font-size: 14px; cursor: pointer;
+  }
+
+  header { text-align: center; padding: 96px 24px 80px; position: relative; overflow: hidden; }
+  header::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(139,92,246,0.12), transparent 70%);
+  }
+  .badge {
+    display: inline-block; font-size: 12px; font-weight: 600; color: #6366f1;
+    background: #eef2ff; padding: 6px 14px; border-radius: 999px; margin-bottom: 24px;
+  }
+  .badge::after { content: ' ✨'; }
+  h1 {
+    font-size: 56px; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6, #d946ef);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .sub { font-size: 19px; color: #64748b; max-width: 620px; margin: 24px auto; line-height: 1.6; }
+  .cta-row { display: flex; gap: 14px; justify-content: center; margin-top: 36px; }
+  .btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; border: none;
+    padding: 14px 28px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer;
+    box-shadow: 0 10px 30px rgba(99,102,241,0.35);
+  }
+  .btn-secondary {
+    background: #fff; color: #334155; border: 1px solid #e2e8f0;
+    padding: 14px 28px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer;
+  }
+
+  .mockup {
+    max-width: 900px; margin: 72px auto 0; background: #fff;
+    border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 24px 60px rgba(15,23,42,0.12);
+    overflow: hidden;
+  }
+  .mockup-bar { display: flex; gap: 6px; padding: 14px 18px; border-bottom: 1px solid #e2e8f0; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .mockup-body { padding: 28px; }
+  .chart { display: flex; align-items: flex-end; gap: 14px; height: 220px; }
+  .bar { flex: 1; border-radius: 6px 6px 0 0; background: linear-gradient(180deg, #a5b4fc, #6366f1); }
+
+  .logos { text-align: center; padding: 48px 0; color: #94a3b8; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; }
+  .logos-row { display: flex; justify-content: center; gap: 40px; margin-top: 20px; font-size: 17px; font-weight: 700; color: #cbd5e1; }
+
+  .features { padding: 80px 0; }
+  .features h2 { text-align: center; font-size: 34px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 48px; }
+  .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .feature-card {
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px 28px;
+    box-shadow: 0 4px 16px rgba(15,23,42,0.05);
+  }
+  .feature-icon {
+    width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center;
+    background: linear-gradient(135deg, #eef2ff, #f5f3ff); font-size: 24px; margin-bottom: 18px;
+  }
+  .feature-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+  .feature-card p { font-size: 14.5px; color: #64748b; line-height: 1.65; }
+
+  .testimonial { max-width: 720px; margin: 0 auto; text-align: center; padding: 72px 24px; }
+  .quote-mark { font-size: 64px; font-weight: 800; background: linear-gradient(135deg,#6366f1,#8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 0.8; }
+  .quote { font-size: 20px; color: #334155; font-weight: 500; line-height: 1.6; margin: 20px 0; }
+  .author { font-size: 14px; color: #94a3b8; }
+  .stars { color: #f59e0b; letter-spacing: 4px; font-size: 14px; }
+
+  .pricing { padding: 72px 0; }
+  .pricing h2 { text-align: center; font-size: 34px; font-weight: 800; margin-bottom: 48px; }
+  .price-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .price-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px; text-align: center; }
+  .price-card.featured { border: 2px solid #6366f1; box-shadow: 0 16px 40px rgba(99,102,241,0.15); position: relative; }
+  .featured-tag {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background: linear-gradient(135deg,#6366f1,#8b5cf6); color: #fff; font-size: 11px; font-weight: 700;
+    padding: 6px 14px; border-radius: 999px;
+  }
+  .price-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
+  .price { font-size: 40px; font-weight: 800; }
+  .price span { font-size: 14px; color: #94a3b8; font-weight: 500; }
+  .price-card ul { list-style: none; margin: 24px 0; font-size: 14px; color: #64748b; }
+  .price-card li { padding: 8px 0; }
+  .price-card li::before { content: '✓ '; color: #6366f1; font-weight: 700; }
+  .price-btn {
+    width: 100%; padding: 12px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer;
+  }
+  .price-btn.primary { background: linear-gradient(135deg,#6366f1,#8b5cf6); color: #fff; }
+  .price-btn.ghost { background: #f1f5f9; color: #334155; }
+
+  .final-cta {
+    text-align: center; padding: 88px 24px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6, #d946ef);
+    border-radius: 24px; margin: 24px; color: #fff;
+  }
+  .final-cta h2 { font-size: 36px; font-weight: 800; margin-bottom: 14px; }
+  .final-cta p { opacity: 0.9; margin-bottom: 28px; font-size: 16px; }
+  .final-cta .btn-primary { background: #fff; color: #6366f1; box-shadow: none; }
+
+  footer { text-align: center; padding: 48px 24px; color: #94a3b8; font-size: 13px; }
+  footer a { color: #64748b; text-decoration: none; margin: 0 12px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-inner">
+    <div class="logo">Skittie</div>
+    <div class="nav-links">
+      <a>Features</a>
+      <a>Pricing</a>
+      <a>Docs</a>
+      <a>Blog</a>
+    </div>
+    <button class="nav-cta">Get Started Free</button>
+  </div>
+</nav>
+
+<header>
+  <div class="badge">New · AI Insights</div>
+  <h1>Know exactly what your users do.</h1>
+  <p class="sub">Product analytics built for indie founders. Funnels, cohorts and session replay that don't require a data team — or a second mortgage.</p>
+  <div class="cta-row">
+    <button class="btn-primary">Start free trial</button>
+    <button class="btn-secondary">Book a demo</button>
+  </div>
+  <div class="mockup">
+    <div class="mockup-bar"><span class="dot" style="background:#f87171"></span><span class="dot" style="background:#fbbf24"></span><span class="dot" style="background:#34d399"></span></div>
+    <div class="mockup-body">
+      <div class="chart">
+        <div class="bar" style="height:35%"></div>
+        <div class="bar" style="height:48%"></div>
+        <div class="bar" style="height:42%"></div>
+        <div class="bar" style="height:65%"></div>
+        <div class="bar" style="height:58%"></div>
+        <div class="bar" style="height:78%"></div>
+        <div class="bar" style="height:90%"></div>
+        <div class="bar" style="height:72%"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="logos">
+  Trusted by 4,000+ indie teams
+  <div class="logos-row">ACME ▸ &nbsp; Fathom &nbsp; ▸ &nbsp; Baseline &nbsp; ▸ &nbsp; Radar &nbsp; ▸ &nbsp; Promptly</div>
+</div>
+
+<section class="features">
+  <div class="container">
+    <h2>Everything you need to grow</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Real-time funnels</h3>
+        <p>See where users drop off at every step — in real time, without complex event schemas.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎥</div>
+        <h3>Session replay</h3>
+        <p>Watch recordings of real sessions to understand friction you'd never see in a chart.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👥</div>
+        <h3>Smart cohorts</h3>
+        <p>Slice users by acquisition channel, plan, or behavior — instantly, no SQL required.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonial">
+  <div class="quote-mark">"</div>
+  <p class="quote">We found the exact step where users churned in a 15-minute session. Skittie paid for itself in one afternoon.</p>
+  <div class="stars">★★★★★</div>
+  <p class="author">— Sarah Chen, founder of Stitchboard</p>
+</section>
+
+<section class="pricing">
+  <div class="container">
+    <h2>Simple pricing</h2>
+    <div class="price-grid">
+      <div class="price-card">
+        <h3>Starter</h3>
+        <div class="price">$0 <span>/mo</span></div>
+        <ul><li>1 project</li><li>10k events/mo</li><li>7-day retention</li></ul>
+        <button class="price-btn ghost">Get started</button>
+      </div>
+      <div class="price-card featured">
+        <div class="featured-tag">Most popular</div>
+        <h3>Pro</h3>
+        <div class="price">$29 <span>/mo</span></div>
+        <ul><li>10 projects</li><li>500k events/mo</li><li>Unlimited retention</li><li>Session replay</li></ul>
+        <button class="price-btn primary">Start 14-day trial</button>
+      </div>
+      <div class="price-card">
+        <h3>Scale</h3>
+        <div class="price">$99 <span>/mo</span></div>
+        <ul><li>Unlimited projects</li><li>5M events/mo</li><li>SSO</li><li>Priority support</li></ul>
+        <button class="price-btn ghost">Contact sales</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="final-cta">
+    <h2>Stop guessing. Start knowing.</h2>
+    <p>Join 4,000+ founders who understand their product.</p>
+    <button class="btn-primary">Start your free trial →</button>
+  </div>
+</div>
+
+<footer>
+  © 2026 Skittie Analytics
+  <br><br>
+  <a>Privacy</a> <a>Terms</a> <a>Twitter</a> <a>Status</a>
+</footer>
+
+</body>
+</html>

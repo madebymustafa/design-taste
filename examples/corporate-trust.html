@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skittie — Product analytics for indie founders</title>
+<style>
+  :root {
+    --surface: #FFFFFF;
+    --panel: #F8FAFC;
+    --panel-hover: #F1F5F9;
+    --ink: #0F1722;
+    --body: #3B4657;
+    --muted: #5B6777;
+    --border: #E1E7EF;
+    --border-strong: #C7D0DC;
+    --accent: #1F4FE0;
+    --success: #0E7F4B;
+    --danger: #C0362C;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--surface); color: var(--body);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-size: 16px;
+  }
+  .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+
+  nav { border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.97); position: sticky; top: 0; z-index: 10; }
+  .nav-inner { display: flex; justify-content: space-between; align-items: center; height: 64px; }
+  .wordmark { font-weight: 600; font-size: 17px; color: var(--ink); letter-spacing: -0.01em; }
+  .wordmark .dot { color: var(--accent); }
+  .nav-center { display: flex; gap: 32px; }
+  .nav-center a { text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; }
+  .nav-center a:hover { color: var(--ink); }
+  .nav-right { display: flex; gap: 12px; align-items: center; }
+  .nav-link { text-decoration: none; color: var(--ink); font-size: 14px; font-weight: 500; padding: 8px 4px; }
+  .nav-link:hover { color: var(--accent); }
+  .nav-cta {
+    background: var(--accent); color: #fff; border: none; border-radius: 6px;
+    padding: 9px 18px; font-size: 14px; font-weight: 500; cursor: pointer; text-decoration: none; display: inline-block;
+  }
+  .nav-cta:hover { background: #1B45C9; }
+
+  header { padding: 96px 0 64px; }
+  .eyebrow { font-size: 13px; font-weight: 500; color: var(--accent); margin-bottom: 18px; }
+  h1 { font-size: clamp(1.9rem, 3.6vw, 2.7rem); font-weight: 600; color: var(--ink); letter-spacing: -0.02em; line-height: 1.15; max-width: 18em; }
+  .hero-sub { margin-top: 18px; font-size: 16px; line-height: 1.65; color: var(--body); max-width: 36em; }
+  .hero-actions { margin-top: 30px; display: flex; gap: 12px; align-items: center; }
+  .btn-primary {
+    background: var(--accent); color: #fff; border: none; border-radius: 6px;
+    padding: 12px 24px; font-size: 15px; font-weight: 500; cursor: pointer; text-decoration: none; display: inline-block;
+  }
+  .btn-primary:hover { background: #1B45C9; }
+  .btn-secondary {
+    background: var(--surface); color: var(--ink); border: 1px solid var(--border-strong); border-radius: 6px;
+    padding: 11px 23px; font-size: 15px; font-weight: 500; cursor: pointer; text-decoration: none; display: inline-block;
+  }
+  .btn-secondary:hover { border-color: var(--ink); }
+
+  .hero-metrics {
+    margin-top: 48px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+  }
+  .hm-head { padding: 13px 18px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--muted); font-weight: 500; }
+  .metric-row { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .metric-cell { padding: 20px 18px; border-right: 1px solid var(--border); }
+  .metric-cell:last-child { border-right: none; }
+  .metric-label { font-size: 12.5px; color: var(--muted); margin-bottom: 8px; }
+  .metric-value { font-size: 24px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .metric-value .accent { color: var(--accent); }
+  .metric-source { margin-top: 6px; font-size: 12px; color: var(--muted); }
+
+  .logos { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--panel); padding: 20px 0; }
+  .logos-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  .logos-label { font-size: 12.5px; color: var(--muted); }
+  .logos-row { display: flex; gap: 32px; color: var(--muted); font-size: 15px; font-weight: 500; filter: grayscale(1); opacity: 0.8; }
+
+  section.section { border-bottom: 1px solid var(--border); }
+  .section-head { padding: 72px 0 40px; display: flex; justify-content: space-between; align-items: end; gap: 48px; flex-wrap: wrap; }
+  .section-head h2 { font-size: clamp(1.5rem, 2.8vw, 2.2rem); font-weight: 600; color: var(--ink); letter-spacing: -0.02em; }
+  .section-manifest { color: var(--muted); font-size: 15px; line-height: 1.65; max-width: 34em; }
+
+  .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding-bottom: 72px; }
+  .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 24px; }
+  .feature-card:hover { border-color: var(--border-strong); background: var(--panel); }
+  .feature-name { font-size: 16.5px; font-weight: 600; color: var(--ink); margin-bottom: 10px; }
+  .feature-desc { font-size: 14px; line-height: 1.65; color: var(--muted); }
+
+  .quote-block { padding: 84px 0; }
+  .quote-wrap { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 36px 40px; }
+  .quote-wrap blockquote { font-size: 20px; font-weight: 500; color: var(--ink); line-height: 1.5; max-width: 30em; }
+  .quote-attribution { margin-top: 20px; font-size: 13.5px; color: var(--muted); }
+  .quote-attribution strong { color: var(--ink); font-weight: 600; }
+
+  .price-table { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 72px; background: var(--surface); }
+  .price-row { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; border-top: 1px solid var(--border); }
+  .price-row:first-child { border-top: none; }
+  .price-row.head { background: var(--panel); }
+  .price-row.head .price-cell { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; padding: 14px 20px; }
+  .price-row.head .price-cell:first-child { color: var(--muted); }
+  .price-cell { padding: 20px; font-size: 14.5px; border-left: 1px solid var(--border); }
+  .price-cell:first-child { border-left: none; font-weight: 500; }
+  .price-cell .amount { font-size: 22px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .price-cell .per { font-size: 12.5px; color: var(--muted); }
+  .price-cell .features { list-style: none; font-size: 13.5px; color: var(--body); }
+  .price-cell .features li { padding: 6px 0; }
+  .price-cell.featured { background: var(--panel); }
+  .featured-tag { display: inline-block; font-size: 12.5px; font-weight: 600; color: var(--accent); margin-bottom: 8px; }
+  .price-btn {
+    margin-top: 12px; width: 100%; padding: 10px; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer;
+    background: var(--surface); color: var(--ink); border: 1px solid var(--border-strong);
+  }
+  .price-btn:hover { border-color: var(--ink); }
+  .price-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .price-btn.primary:hover { background: #1B45C9; }
+
+  .compliance-strip { display: flex; gap: 32px; flex-wrap: wrap; padding-bottom: 72px; align-items: center; }
+  .compliance-item { font-size: 13px; color: var(--muted); font-weight: 500; }
+  .compliance-item .badge {
+    display: inline-block; border: 1px solid var(--border-strong); border-radius: 999px;
+    padding: 5px 14px; font-size: 12.5px; font-weight: 500; color: var(--body); background: var(--surface);
+  }
+
+  .final-cta { padding: 96px 0; text-align: center; }
+  .final-cta h2 { font-size: clamp(1.7rem, 3.2vw, 2.5rem); font-weight: 600; color: var(--ink); letter-spacing: -0.02em; }
+  .final-cta p { margin: 14px 0 30px; color: var(--muted); font-size: 15px; }
+  .final-cta .btn-primary { padding: 13px 28px; font-size: 15px; }
+
+  footer { border-top: 1px solid var(--border); padding: 52px 0 60px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
+  .footer-brand .wordmark { font-size: 16px; }
+  .footer-brand p { margin-top: 10px; font-size: 13px; color: var(--muted); max-width: 24em; line-height: 1.6; }
+  .footer-col h4 { font-size: 12.5px; font-weight: 600; color: var(--ink); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px; }
+  .footer-col a { display: block; text-decoration: none; color: var(--muted); font-size: 13.5px; padding: 5px 0; }
+  .footer-col a:hover { color: var(--accent); }
+  .footer-bottom { margin-top: 44px; padding-top: 22px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 12.5px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-inner">
+    <div class="wordmark">skittie<span class="dot">.</span>com</div>
+    <div class="nav-center">
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#">Customers</a>
+      <a href="#">Resources</a>
+    </div>
+    <div class="nav-right">
+      <a class="nav-link" href="#">Sign in</a>
+      <a class="nav-cta" href="#">Start free trial</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="container">
+    <p class="eyebrow">Product analytics for independent development teams</p>
+    <h1>Know exactly what your users do — without building a data team</h1>
+    <p class="hero-sub">Funnels, cohorts and session replay designed for products with one to twenty people. No event schemas to design. No pipelines to maintain. Reports in minutes, not weeks.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#pricing">Start a 14-day free trial</a>
+      <a class="btn-secondary" href="#">Talk to sales</a>
+    </div>
+
+    <div class="hero-metrics">
+      <div class="hm-head">Customer benchmarks — 2025 cohort, n = 4,120 teams</div>
+      <div class="metric-row">
+        <div class="metric-cell">
+          <p class="metric-label">Median trial → paid conversion</p>
+          <p class="metric-value">18.4<span class="accent">%</span></p>
+          <p class="metric-source">Skittie data, p75 window</p>
+        </div>
+        <div class="metric-cell">
+          <p class="metric-label">Median time to first insight</p>
+          <p class="metric-value">9 min</p>
+          <p class="metric-source">From first event to first report</p>
+        </div>
+        <div class="metric-cell">
+          <p class="metric-label">90-day churn, paid plans</p>
+          <p class="metric-value">2.1<span class="accent">%</span></p>
+          <p class="metric-source">All paid plans, 2025</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="logos">
+  <div class="container logos-inner">
+    <span class="logos-label">Trusted by 4,000+ independent teams, including</span>
+    <div class="logos-row">
+      <span><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M12 3L21 19H3Z"/></svg>Acme</span><span><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M3 16a9 9 0 0 1 18 0h-3a6 6 0 0 0-12 0z"/></svg>Fathom</span><span><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M4 8h5v2H4zM4 14h8v2H4zM4 20h12v2H4z"/></svg>Baseline</span><span><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zm0 3.5a5 5 0 1 1 0 10 5 5 0 0 1 0-10z"/><path d="M12 10.8a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4z"/></svg>Radar</span><span><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M9 5h3.5L21 12l-8.5 7H9l8.5-7z"/></svg>Promptly</span>
+    </div>
+  </div>
+</div>
+
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-head">
+      <h2>Everything you need to understand usage</h2>
+      <p class="section-manifest">Three instruments, one source of truth. Each feature is designed to deliver an insight in the first session — no configuration required.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3 class="feature-name">Real-time funnels</h3>
+        <p class="feature-desc">Monitor drop-off at every step of your flows, live. Funnels are created from plain-language steps, not schema definitions.</p>
+      </div>
+      <div class="feature-card">
+        <h3 class="feature-name">Session replay</h3>
+        <p class="feature-desc">Review real user sessions to understand friction that charts cannot show. Privacy-safe recording with configurable retention.</p>
+      </div>
+      <div class="feature-card">
+        <h3 class="feature-name">Smart cohorts</h3>
+        <p class="feature-desc">Segment by acquisition channel, plan, or behavior. Queries are written in English against your existing event stream.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container quote-block">
+    <div class="quote-wrap">
+      <blockquote>“We found the exact step where users churned in a fifteen-minute session. Skittie paid for itself in one afternoon.”</blockquote>
+      <p class="quote-attribution"><strong>Sarah Chen</strong> — Founder, Stitchboard · 12-person team, 40k monthly users</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="pricing">
+  <div class="container">
+    <div class="section-head">
+      <h2>Simple, transparent pricing</h2>
+      <p class="section-manifest">Annual billing includes two months free. All plans include a 14-day trial — no credit card required.</p>
+    </div>
+    <div class="price-table">
+      <div class="price-row head">
+        <div class="price-cell">Plan</div>
+        <div class="price-cell">Starter</div>
+        <div class="price-cell">Pro</div>
+        <div class="price-cell">Scale</div>
+      </div>
+      <div class="price-row">
+        <div class="price-cell">
+          <span class="featured-tag" style="color:var(--ink)">For first projects</span><br>
+          Monthly price
+        </div>
+        <div class="price-cell"><span class="amount">$0</span> <span class="per">forever</span></div>
+        <div class="price-cell featured"><span class="featured-tag">Most popular</span><br><span class="amount">$29</span> <span class="per">/ month</span></div>
+        <div class="price-cell"><span class="amount">$99</span> <span class="per">/ month</span></div>
+      </div>
+      <div class="price-row">
+        <div class="price-cell">Usage</div>
+        <div class="price-cell">1 project · 10k events/mo</div>
+        <div class="price-cell featured">10 projects · 500k events/mo</div>
+        <div class="price-cell">Unlimited projects · 5M events/mo</div>
+      </div>
+      <div class="price-row">
+        <div class="price-cell">Includes</div>
+        <div class="price-cell">7-day retention<br><button class="price-btn">Get started</button></div>
+        <div class="price-cell featured">Unlimited retention · Session replay<br><button class="price-btn primary">Start 14-day trial</button></div>
+        <div class="price-cell">SSO & audit log · Priority support<br><button class="price-btn">Contact sales</button></div>
+      </div>
+    </div>
+    <div class="compliance-strip">
+      <span class="compliance-item"><span class="badge">SOC 2 Type II</span></span>
+      <span class="compliance-item"><span class="badge">GDPR</span></span>
+      <span class="compliance-item"><span class="badge">ISO 27001</span></span>
+      <span class="compliance-item">EU data residency available</span>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta">
+  <h2>Start your 14-day trial — no credit card required</h2>
+  <p>Set up in four minutes. Cancel in two clicks.</p>
+  <a class="btn-primary" href="#">Start free trial</a>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="wordmark">skittie<span class="dot">.</span>com</div>
+        <p>Product analytics for independent teams. Founded 2021, headquartered in Berlin.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="#">Features</a>
+        <a href="#">Pricing</a>
+        <a href="#">Changelog</a>
+        <a href="#">Status</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="#">Documentation</a>
+        <a href="#">API reference</a>
+        <a href="#">Blog</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Privacy policy</a>
+        <a href="#">Terms of service</a>
+        <a href="#">Data processing</a>
+        <a href="#">Security</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Skittie Analytics GmbH. All rights reserved.</span>
+      <span>Uptime 99.9% SLA — status.skittie.com</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

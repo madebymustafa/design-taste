@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skittie — Product analytics for indie founders</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F7F5E7;
+    --card: #FCFBF4;
+    --ink: #121212;
+    --blue: #0F4BFD;
+    --line: rgba(18, 18, 18, 0.14);
+    --line-cream: rgba(247, 245, 231, 0.16);
+    --muted: rgba(18, 18, 18, 0.55);
+    --muted-cream: rgba(247, 245, 231, 0.55);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+  .lenis.lenis-stopped { overflow: hidden; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: 'Inter Tight', -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; }
+  .kicker { color: var(--muted); }
+  .kicker em { color: var(--blue); font-style: normal; }
+  .blue { color: var(--blue); }
+  a { color: inherit; }
+  .container { max-width: 72rem; margin: 0 auto; padding: 0 32px; }
+  .mask-line { display: block; overflow: hidden; }
+  .mask-line > span { display: block; }
+
+  /* ── preloader ── */
+  .preloader {
+    display: none; position: fixed; inset: 0; z-index: 120;
+    background: var(--paper); align-items: flex-end; justify-content: space-between;
+    padding: 24px 32px 34px;
+  }
+  .preloader.is-active { display: flex; }
+  .pre-inner { display: flex; width: 100%; justify-content: space-between; align-items: baseline; }
+  .pre-kicker { color: var(--muted); }
+  .pre-kicker::after {
+    content: ""; display: inline-block; width: 7px; height: 7px; margin-left: 10px;
+    background: var(--blue); border-radius: 50%; animation: pulse 2.2s ease-out infinite; vertical-align: 1px;
+  }
+  @keyframes pulse { 0% { opacity: 1; } 60% { opacity: 0.12; } 100% { opacity: 1; } }
+  .pre-count { font-size: clamp(5rem, 13vw, 10rem); font-weight: 600; letter-spacing: -0.04em; line-height: 0.85; font-variant-numeric: tabular-nums; }
+
+  /* ── custom cursor ── */
+  .cursor-ring, .cursor-dot { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 200; border-radius: 50%; opacity: 0; }
+  .cursor-ring { width: 34px; height: 34px; border: 1px solid rgba(255, 255, 255, 0.5); mix-blend-mode: difference; display: flex; align-items: center; justify-content: center; }
+  .cursor-ring.is-drag { width: 76px; height: 76px; mix-blend-mode: normal; background: var(--blue); border-color: var(--blue); }
+  .cursor-ring.is-drag::after { content: "DRAG"; font-family: ui-monospace, Menlo, monospace; font-size: 9px; letter-spacing: 0.14em; color: var(--paper); }
+  .cursor-dot { width: 5px; height: 5px; background: #fff; }
+  body.cursor-on .cursor-ring, body.cursor-on .cursor-dot { opacity: 1; }
+  @media (pointer: coarse) { .cursor-ring, .cursor-dot { display: none; } }
+
+  /* ── nav ── */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; border-bottom: 1px solid var(--line); background: rgba(247, 245, 231, 0.85); backdrop-filter: blur(10px); }
+  .nav-progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 51; background: var(--blue); transform: scaleX(0); transform-origin: left; }
+  .nav-inner { display: flex; justify-content: space-between; align-items: center; height: 64px; }
+  .wordmark { font-weight: 600; font-size: 17px; letter-spacing: -0.02em; }
+  .nav-links { display: flex; gap: 34px; align-items: center; }
+  .nav-links a { text-decoration: none; font-size: 14px; color: var(--muted); }
+  .nav-links a:hover { color: var(--ink); }
+  .btn-pill {
+    position: relative; display: inline-block; overflow: hidden; cursor: pointer;
+    background: var(--ink); color: var(--paper); border: none; border-radius: 999px;
+    padding: 15px 34px; font-family: 'Inter Tight', sans-serif; font-weight: 600;
+    font-size: 13px; letter-spacing: 0.01em; text-decoration: none;
+  }
+  .btn-pill::before { content: ""; position: absolute; inset: 0; background: var(--blue); transform: translateY(102%); transition: transform 0.35s cubic-bezier(0.76, 0, 0.24, 1); }
+  .btn-pill:hover::before { transform: translateY(0); }
+  .btn-pill > span { position: relative; z-index: 1; }
+  .nav-cta { padding: 10px 20px; font-size: 12px; }
+  .nav-links .nav-cta { color: var(--paper); }
+  .nav-links .nav-cta:hover { color: var(--paper); }
+  .nav-links .nav-cta span { color: inherit; }
+
+  /* ── hero ── */
+  header { position: relative; overflow: hidden; padding: calc(64px + 18vh) 0 15vh; }
+  #particles { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+  .orbit-ring {
+    position: absolute; right: -9vw; top: 8vh; z-index: 0;
+    width: min(46vw, 620px); aspect-ratio: 1; border-radius: 50%;
+    border: 1px dashed rgba(15, 75, 253, 0.35); animation: orbit-spin 46s linear infinite;
+  }
+  .orbit-ring::after { content: ""; position: absolute; top: -4px; left: 50%; width: 8px; height: 8px; background: var(--blue); border-radius: 50%; }
+  @keyframes orbit-spin { to { transform: rotate(360deg); } }
+  .hero-body { position: relative; z-index: 1; }
+  .hero-grid { display: grid; grid-template-columns: 7fr 5fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .hero-kicker { margin-bottom: 44px; }
+  h1 { font-size: clamp(3rem, 7.6vw, 7rem); font-weight: 600; letter-spacing: -0.04em; line-height: 0.94; }
+  .hero-sub { margin-top: 36px; max-width: 30em; color: var(--muted); font-size: 16px; line-height: 1.7; }
+  .hero-sub strong { color: var(--ink); font-weight: 500; }
+  .hero-actions { margin-top: 48px; display: flex; gap: 36px; align-items: center; }
+  .btn-text { text-decoration: none; font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); border-bottom: 1px solid var(--blue); padding-bottom: 5px; }
+  .btn-text:hover { color: var(--blue); }
+  .hero-meta { margin-top: 70px; display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; color: var(--muted); }
+
+  /* ── live product screen ── */
+  .live-screen { position: relative; z-index: 1; background: var(--card); border: 1px solid var(--line); padding: 24px; }
+  .ls-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+  .ls-title { font-size: 9.5px; color: var(--muted); }
+  .ls-dot { width: 7px; height: 7px; background: var(--blue); border-radius: 50%; animation: pulse 2.2s ease-out infinite; }
+  .ls-value { margin-top: 20px; font-size: clamp(2.4rem, 3.4vw, 3.2rem); font-weight: 600; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .ls-label { margin-top: 8px; font-size: 9.5px; color: var(--muted); }
+  .ls-funnel { display: flex; align-items: flex-end; gap: 6px; height: 84px; margin-top: 22px; }
+  .ls-bar { flex: 1; background: var(--ink); }
+  .ls-bar.blue { background: var(--blue); animation: bar-pulse 3.2s ease-in-out infinite; }
+  @keyframes bar-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+  .ls-funnel .fb1 { height: 34%; } .ls-funnel .fb2 { height: 52%; } .ls-funnel .fb3 { height: 70%; } .ls-funnel .fb4 { height: 88%; } .ls-funnel .fb5 { height: 100%; }
+  .ls-wave { display: flex; align-items: center; gap: 3px; height: 52px; margin-top: 18px; }
+  .ls-wave i { flex: 1; background: var(--ink); animation: wave-bounce 1.7s ease-in-out infinite; }
+  .ls-wave i.hot { background: var(--blue); }
+  .ls-wave i:nth-child(1) { height: 42%; } .ls-wave i:nth-child(2) { height: 68%; } .ls-wave i:nth-child(3) { height: 54%; }
+  .ls-wave i:nth-child(4) { height: 88%; } .ls-wave i:nth-child(5) { height: 38%; } .ls-wave i:nth-child(6) { height: 74%; }
+  .ls-wave i:nth-child(7) { height: 96%; } .ls-wave i:nth-child(8) { height: 52%; } .ls-wave i:nth-child(9) { height: 64%; }
+  .ls-wave i:nth-child(10) { height: 82%; } .ls-wave i:nth-child(11) { height: 46%; } .ls-wave i:nth-child(12) { height: 70%; }
+  .ls-wave i:nth-child(13) { height: 90%; } .ls-wave i:nth-child(14) { height: 40%; } .ls-wave i:nth-child(15) { height: 60%; }
+  .ls-wave i:nth-child(16) { height: 30%; }
+  .ls-wave i:nth-child(even) { animation-delay: 0.18s; }
+  .ls-wave i:nth-child(3n) { animation-delay: 0.09s; }
+  @keyframes wave-bounce { 0%, 100% { transform: scaleY(0.45); } 50% { transform: scaleY(1); } }
+  .ls-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; border-top: 1px solid var(--line); margin-top: 20px; padding-top: 16px; }
+  .ls-stat-v { font-weight: 600; font-size: 15px; letter-spacing: -0.01em; }
+  .ls-stat-l { margin-top: 4px; font-size: 9px; color: var(--muted); }
+
+  /* ── marquee ── */
+  .marquee { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; }
+  .marquee-track { display: flex; width: max-content; animation: marquee 30s linear infinite; }
+  .marquee-half {
+    display: flex; gap: 3rem; padding-right: 3rem; white-space: nowrap;
+    font-family: 'Inter Tight', sans-serif; font-weight: 600; font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+    letter-spacing: -0.02em; color: transparent; -webkit-text-stroke: 1px rgba(18, 18, 18, 0.38);
+    padding-top: 24px; padding-bottom: 24px;
+  }
+  .marquee-half .star { color: var(--blue); -webkit-text-stroke: 0; }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+
+  /* ── briefs ── */
+  .brief { border-top: 1px solid var(--line); padding: 17vh 0; }
+  .brief-kicker { margin-bottom: 34px; }
+  .brief-h { font-size: clamp(2.4rem, 5.4vw, 4.6rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.04; }
+  .brief-p { margin-top: 26px; max-width: 34em; color: var(--muted); font-size: 16px; line-height: 1.7; }
+  .brief-blue { background: var(--blue); border-top: none; color: var(--paper); }
+  .brief-blue .kicker { color: rgba(247, 245, 231, 0.6); }
+  .brief-blue .brief-p { color: rgba(247, 245, 231, 0.75); }
+
+  /* ── pinned index (dark) ── */
+  .index-scene { background: var(--ink); border-top: 1px solid rgba(247, 245, 231, 0.12); color: var(--paper); }
+  .index-stage { height: 100vh; display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+  .index-kicker { color: var(--muted-cream); }
+  .index-kicker em { color: var(--blue); font-style: normal; }
+  .index-num-row { display: flex; align-items: baseline; gap: 6px; }
+  .index-num { font-size: clamp(7rem, 22vw, 17rem); font-weight: 600; letter-spacing: -0.05em; line-height: 0.9; font-variant-numeric: tabular-nums; }
+  .index-pct { font-size: clamp(3rem, 9vw, 7rem); font-weight: 600; letter-spacing: -0.04em; color: var(--blue); }
+  .index-line { font-size: clamp(1.7rem, 3.6vw, 3rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; color: var(--paper); }
+  .index-line .blue { color: var(--blue); }
+  .index-progress { margin-top: 34px; width: 100%; height: 1px; background: rgba(247, 245, 231, 0.18); }
+  .index-fill { height: 1px; background: var(--blue); transform: scaleX(0); transform-origin: left; }
+  .index-note { margin-top: 22px; color: var(--muted-cream); }
+
+  /* ── drag carousel ── */
+  .carousel-scene { border-top: 1px solid var(--line); padding: 0 0 17vh; }
+  .carousel-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; padding-top: clamp(120px, 16vh, 170px); margin-bottom: 8px; }
+  .carousel-head h2 { font-size: clamp(1.6rem, 3.4vw, 2.6rem); font-weight: 600; letter-spacing: -0.02em; margin-top: 14px; }
+  .carousel-hint { white-space: nowrap; }
+  .carousel-wrap { overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; touch-action: pan-x; }
+  .carousel-wrap::-webkit-scrollbar { display: none; }
+  .drag-live .carousel-wrap { overflow: hidden; }
+  .drag-live .card { scroll-snap-align: none; }
+  .carousel-track { display: flex; gap: 28px; padding: 56px 0 20px; width: max-content; }
+  .card {
+    width: clamp(340px, 26vw, 430px); flex-shrink: 0; background: var(--card);
+    border: 1px solid var(--line); scroll-snap-align: center;
+  }
+  .card-art { height: 220px; display: flex; align-items: flex-end; padding: 28px; border-bottom: 1px solid var(--line); overflow: hidden; }
+  .card-copy { padding: 26px 28px 30px; }
+  .card-label { color: var(--muted); margin-bottom: 14px; }
+  .card h3 { font-size: clamp(1.3rem, 2vw, 1.7rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; }
+  .card-p { margin-top: 14px; color: var(--muted); font-size: 14.5px; line-height: 1.65; }
+  .card-dark { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .card-dark .card-label { color: var(--muted-cream); }
+  .card-dark .card-art { border-bottom-color: rgba(247, 245, 231, 0.14); }
+  .card-dark .card-p { color: var(--muted-cream); }
+  .card-mini { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.05; }
+  .funnel-art { display: flex; flex-direction: column; gap: 7px; width: 180px; }
+  .f-bar { display: block; height: 14px; background: var(--ink); }
+  .f4 { background: var(--blue); }
+  .f-tag { margin-top: 10px; color: var(--muted); }
+  .wave-art { display: flex; align-items: center; gap: 4px; height: 90px; }
+  .wave-art i { display: block; width: 6px; background: var(--ink); }
+  .wave-art i.w6 { background: var(--blue); }
+  .wave-art .w1 { height: 30%; } .wave-art .w2 { height: 52%; } .wave-art .w3 { height: 74%; } .wave-art .w4 { height: 90%; }
+  .wave-art .w5 { height: 64%; } .wave-art .w6 { height: 100%; } .wave-art .w7 { height: 58%; } .wave-art .w8 { height: 36%; }
+  .wave-art .w9 { height: 66%; } .wave-art .w10 { height: 84%; } .wave-art .w11 { height: 48%; } .wave-art .w12 { height: 26%; }
+  .grid-art { display: grid; grid-template-columns: repeat(7, 16px); gap: 4px; }
+  .c-cell { width: 16px; height: 16px; background: var(--ink); }
+  .c-cell.hot { background: var(--blue); }
+
+  /* ── accordion ── */
+  .acc-scene { border-top: 1px solid var(--line); padding: 16vh 0; }
+  .acc-head { margin-bottom: 48px; }
+  .acc-head h2 { font-size: clamp(1.8rem, 3.8vw, 3rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.05; max-width: 20em; margin-top: 14px; }
+  .acc { border-top: 1px solid var(--line); }
+  .acc:last-of-type { border-bottom: 1px solid var(--line); }
+  .acc-sum { display: flex; gap: 22px; align-items: baseline; padding: 26px 0; cursor: pointer; list-style: none; }
+  .acc-sum::-webkit-details-marker { display: none; }
+  .acc-no { color: var(--muted); }
+  .acc-sum h3 { font-size: clamp(1.2rem, 2.2vw, 1.7rem); font-weight: 600; letter-spacing: -0.02em; transition: color 0.25s; }
+  .acc-sum:hover h3 { color: var(--blue); }
+  .acc-icon {
+    margin-left: auto; width: 34px; height: 34px; flex-shrink: 0; display: grid; place-items: center;
+    border: 1px solid var(--line); border-radius: 50%; font-size: 20px; line-height: 1; font-weight: 400;
+    transition: transform 0.35s cubic-bezier(0.76, 0, 0.24, 1);
+  }
+  .acc[open] .acc-icon { transform: rotate(45deg); }
+  .acc-body { padding: 0 0 34px; max-width: 34em; color: var(--muted); font-size: 15px; line-height: 1.7; }
+  .acc-body ul { list-style: none; margin-top: 16px; }
+  .acc-body li { position: relative; padding-left: 18px; margin-top: 7px; }
+  .acc-body li::before { content: ""; position: absolute; left: 2px; top: 0.62em; width: 5px; height: 5px; background: var(--blue); }
+
+  /* ── pinned roadmap (dark) ── */
+  .roadmap-scene { background: var(--ink); border-top: 1px solid rgba(247, 245, 231, 0.12); color: var(--paper); }
+  .roadmap-stage { height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+  .roadmap-kicker { color: var(--muted-cream); margin-bottom: 44px; }
+  .roadmap-kicker em { color: var(--blue); font-style: normal; }
+  .roadmap-steps { position: relative; list-style: none; }
+  .rail { position: absolute; top: 10px; bottom: 10px; left: 5px; width: 1px; background: rgba(247, 245, 231, 0.18); }
+  .rail-fill { position: absolute; inset: 0; background: var(--blue); transform: scaleY(0); transform-origin: top; }
+  .rstep { position: relative; padding: 26px 0 26px 44px; }
+  .rstep + .rstep { border-top: 1px solid rgba(247, 245, 231, 0.12); }
+  .rstep-no { color: var(--muted-cream); }
+  .rstep h3 { font-size: clamp(1.4rem, 2.6vw, 2.2rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; margin-top: 8px; }
+  .rstep p { color: var(--muted-cream); font-size: 15px; line-height: 1.65; max-width: 30em; margin-top: 8px; }
+
+  /* ── evidence ── */
+  .evidence-scene { border-top: 1px solid var(--line); padding: 18vh 0; }
+  .evidence-kicker { margin-bottom: 34px; }
+  .evidence-blockquote { font-size: clamp(1.9rem, 3.8vw, 3.1rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.22; max-width: 22em; }
+  .evidence-attribution { margin-top: 34px; }
+  .metrics { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); margin-top: 90px; }
+  .metric-cell { padding: 44px 32px 0 0; }
+  .metric-cell + .metric-cell { border-left: 1px solid var(--line); padding-left: 32px; }
+  .metric-value { font-size: clamp(2.8rem, 5.4vw, 4.4rem); font-weight: 600; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+  .metric-label { margin-top: 14px; color: var(--muted); }
+
+  /* ── close ── */
+  .close-scene { position: relative; background: var(--blue); color: var(--paper); padding: 22vh 0; overflow: hidden; }
+  .ghost-type {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-weight: 700; font-size: clamp(6rem, 22vw, 22rem); letter-spacing: -0.04em; white-space: nowrap;
+    color: transparent; -webkit-text-stroke: 1px rgba(247, 245, 231, 0.16); pointer-events: none; z-index: 0;
+  }
+  .close-scene > .container { position: relative; z-index: 1; }
+  .close-kicker { color: rgba(247, 245, 231, 0.7); margin-bottom: 40px; }
+  .close-scene h2 { font-size: clamp(2.8rem, 7.5vw, 6.4rem); font-weight: 600; letter-spacing: -0.04em; line-height: 0.96; }
+  .hollow { color: transparent; -webkit-text-stroke: 1.5px rgba(247, 245, 231, 0.95); }
+  .cta-wrap { margin-top: 56px; display: flex; align-items: center; gap: 36px; }
+  .btn-pill-inverse { background: var(--paper); color: var(--ink); }
+  .btn-pill-inverse::before { background: var(--ink); }
+  .btn-pill-inverse:hover { color: var(--paper); }
+  .btn-ghost-white { color: var(--paper); border-bottom-color: rgba(247, 245, 231, 0.5); }
+  .close-note { margin-top: 42px; color: rgba(247, 245, 231, 0.7); }
+
+  /* ── footer ── */
+  footer { background: var(--ink); color: var(--paper); padding: 56px 0 72px; }
+  .footer-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 28px; align-items: flex-start; }
+  .footer-links { display: flex; flex-direction: column; gap: 12px; }
+  .footer-links a { text-decoration: none; color: var(--muted-cream); font-size: 13px; }
+  .footer-links a:hover { color: var(--paper); }
+  .footer-colophon { display: flex; flex-direction: column; gap: 12px; color: var(--muted-cream); text-align: right; }
+
+  /* ── mobile + reduced-motion: static, stacked, complete ── */
+  @media (max-width: 767px), (prefers-reduced-motion: reduce) {
+    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+    .hero-meta { margin-top: 40px; }
+    .index-stage { height: auto; padding: 120px 0; }
+    .index-num { font-size: clamp(5rem, 30vw, 9rem); }
+    .roadmap-stage { height: auto; padding: 120px 0; }
+    .carousel-track { flex-direction: column; width: 100%; padding: 32px 0 0; }
+    .carousel-wrap { overflow: visible; scroll-snap-type: none; }
+    .card { width: 100%; }
+    .metrics { grid-template-columns: 1fr; gap: 36px; }
+    .metric-cell { padding: 0; }
+    .metric-cell + .metric-cell { border-left: none; padding-left: 0; }
+    .hero-actions { flex-direction: column; align-items: flex-start; gap: 24px; }
+    .orbit-ring { display: none; }
+    .marquee-track { animation: none; }
+    .pre-kicker::after { animation: none; }
+    .ls-dot, .ls-bar.blue, .ls-wave i { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="preloader" id="preloader">
+  <div class="pre-inner">
+    <span class="mono pre-kicker">SKITTIE — LOADING THE STORY</span>
+    <span class="pre-count" id="pre-count">00</span>
+  </div>
+</div>
+
+<div class="cursor-ring" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+
+<div class="nav-progress" aria-hidden="true"></div>
+
+<nav>
+  <div class="container nav-inner">
+    <div class="wordmark">Skittie</div>
+    <div class="nav-links">
+      <a href="#carousel">Features</a>
+      <a href="#details">Details</a>
+      <a href="#evidence">Evidence</a>
+      <a href="#close" class="btn-pill nav-cta"><span>Start free</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="orbit-ring" aria-hidden="true"></div>
+  <div class="container hero-body">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="hero-kicker mono">PRODUCT ANALYTICS FOR FOUNDERS — KNOW YOUR USERS</p>
+        <h1>
+          <span class="mask-line"><span>Know <span class="blue">exactly</span></span></span>
+          <span class="mask-line"><span>what your users do.</span></span>
+        </h1>
+        <p class="hero-sub">Funnels, cohorts and session replay for independent products — the clarity of a data team, <strong>without the schema, the SQL,</strong> or the second mortgage.</p>
+        <div class="hero-actions">
+          <button class="btn-pill magnetic" type="button"><span>Start free trial</span></button>
+          <a class="btn-text" href="#carousel">Book a demo →</a>
+        </div>
+        <div class="hero-meta mono">
+          <span>VOL. 02 — REVISED 2026</span>
+          <span>DIRECTED BY THE DATA · 60 FPS</span>
+        </div>
+      </div>
+      <div class="live-screen" aria-hidden="true">
+        <div class="ls-head">
+          <span class="mono ls-title">SKITTIE — LIVE DASHBOARD</span>
+          <span class="ls-dot"></span>
+        </div>
+        <p class="ls-value" id="live-count">1,284</p>
+        <p class="mono ls-label">VISITORS RIGHT NOW — SIGNUP FUNNEL</p>
+        <div class="ls-funnel">
+          <span class="ls-bar fb1"></span>
+          <span class="ls-bar fb2"></span>
+          <span class="ls-bar fb3"></span>
+          <span class="ls-bar fb4"></span>
+          <span class="ls-bar blue fb5"></span>
+        </div>
+        <div class="ls-wave">
+          <i></i><i></i><i></i><i></i><i></i><i class="hot"></i><i></i><i></i><i></i><i></i><i></i><i class="hot"></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="ls-stats">
+          <div><p class="ls-stat-v">63%</p><p class="mono ls-stat-l">LEAKING</p></div>
+          <div><p class="ls-stat-v">9 min</p><p class="mono ls-stat-l">TO VALUE</p></div>
+          <div><p class="ls-stat-v">2.1%</p><p class="mono ls-stat-l">CHURN</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="brief" id="leak">
+  <div class="container">
+    <p class="mono kicker brief-kicker">01 — THE LEAK</p>
+    <h2 class="brief-h">Your signup form is leaking <span class="blue">63%</span> of visitors.</h2>
+    <p class="brief-p">The data was there the whole time. Nobody was reading it — because nobody could read it.</p>
+  </div>
+</section>
+
+<section class="index-scene" id="index">
+  <div class="index-stage">
+    <div class="container">
+      <p class="mono index-kicker">02 — THE <em>INDEX</em></p>
+      <div class="index-num-row">
+        <span class="index-num" id="index-num">63</span>
+        <span class="index-pct">%</span>
+      </div>
+      <p class="index-line"><span class="mask-line"><span>The data exists —</span></span></p>
+      <p class="index-line"><span class="mask-line"><span>it's just <span class="blue">locked away</span>.</span></span></p>
+      <p class="index-line"><span class="mask-line"><span>You ship blind and call it momentum.</span></span></p>
+      <div class="index-progress"><div class="index-fill"></div></div>
+      <p class="mono index-note">KEEP SCROLLING — THE INDEX COUNTS WITH YOU</p>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <div class="marquee-half">FUNNELS <span class="star">✳</span> COHORTS <span class="star">✳</span> SESSION REPLAY <span class="star">✳</span> FOR FOUNDERS, NOT DATA TEAMS <span class="star">✳</span></div>
+    <div class="marquee-half">FUNNELS <span class="star">✳</span> COHORTS <span class="star">✳</span> SESSION REPLAY <span class="star">✳</span> FOR FOUNDERS, NOT DATA TEAMS <span class="star">✳</span></div>
+  </div>
+</div>
+
+<section class="brief brief-blue">
+  <div class="container">
+    <p class="mono kicker brief-kicker">03 — THE INSTRUMENTS</p>
+    <h2 class="brief-h">Three instruments, one language.</h2>
+    <p class="brief-p">No schemas to design. No pipelines to babysit. Just the questions you're already asking.</p>
+  </div>
+</section>
+
+<section class="carousel-scene" id="carousel">
+  <div class="container carousel-head">
+    <div>
+      <p class="mono kicker">THE RACK</p>
+      <h2>Pick your instrument.</h2>
+    </div>
+    <p class="mono kicker carousel-hint">DRAG THE CARDS —→</p>
+  </div>
+  <div class="carousel-wrap">
+    <div class="carousel-track">
+      <div class="card card-dark">
+        <div class="card-art">
+          <p class="card-mini">Know what<br>happens.</p>
+        </div>
+        <div class="card-copy">
+          <p class="mono card-label">00 — KEEP DRAGGING</p>
+          <h3>Four cards, three instruments.</h3>
+          <p class="card-p">Drag to move through them. Momentum is included — like everything else on this page.</p>
+        </div>
+      </div>
+      <article class="card">
+        <div class="card-art">
+          <div class="funnel-art" aria-hidden="true">
+            <span class="f-bar f1"></span>
+            <span class="f-bar f2"></span>
+            <span class="f-bar f3"></span>
+            <span class="f-bar f4"></span>
+            <span class="mono f-tag">1,240 → 118</span>
+          </div>
+        </div>
+        <div class="card-copy">
+          <p class="mono card-label">01 — REAL-TIME FUNNELS</p>
+          <h3>See the drop-off, live.</h3>
+          <p class="card-p">Every step, every visitor — funnels that read like questions, not configuration screens.</p>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card-art">
+          <div class="wave-art" aria-hidden="true">
+            <i class="w1"></i><i class="w2"></i><i class="w3"></i><i class="w4"></i><i class="w5"></i><i class="w6"></i><i class="w7"></i><i class="w8"></i><i class="w9"></i><i class="w10"></i><i class="w11"></i><i class="w12"></i>
+            <span class="mono f-tag">09:41 — THE DROP-OFF MOMENT</span>
+          </div>
+        </div>
+        <div class="card-copy">
+          <p class="mono card-label">02 — SESSION REPLAY</p>
+          <h3>Watch the friction.</h3>
+          <p class="card-p">Real sessions, watched the way you'd review footage — to find what no chart will show you.</p>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card-art">
+          <div class="grid-art" aria-hidden="true">
+            <span class="c-cell hot"></span><span class="c-cell"></span><span class="c-cell"></span><span class="c-cell"></span><span class="c-cell"></span><span class="c-cell"></span><span class="c-cell"></span>
+            <span class="c-cell"></span><span class="c-cell hot"></span><span class="c-cell"></span><span class="c-cell"></span><span class="c-cell hot"></span><span class="c-cell"></span><span class="c-cell"></span>
+            <span class="c-cell"></span><span class="c-cell"></span><span class="c-cell"></span><span class="c-cell"></span><span class="c-cell"></span><span class="c-cell hot"></span><span class="c-cell"></span>
+            <span class="c-cell hot"></span><span class="c-cell"></span><span class="c-cell hot"></span><span class="c-cell"></span><span class="c-cell"></span><span class="c-cell"></span><span class="c-cell hot"></span>
+            <span class="c-cell"></span><span class="c-cell"></span><span class="c-cell hot"></span><span class="c-cell"></span><span class="c-cell hot"></span><span class="c-cell"></span><span class="c-cell"></span>
+            <span class="c-cell hot"></span><span class="c-cell"></span><span class="c-cell"></span><span class="c-cell"></span><span class="c-cell"></span><span class="c-cell hot"></span><span class="c-cell"></span>
+            <span class="c-cell"></span><span class="c-cell hot"></span><span class="c-cell"></span><span class="c-cell hot"></span><span class="c-cell"></span><span class="c-cell"></span><span class="c-cell hot"></span>
+          </div>
+        </div>
+        <div class="card-copy">
+          <p class="mono card-label">03 — SMART COHORTS</p>
+          <h3>Slice in plain English.</h3>
+          <p class="card-p">By acquisition channel, plan, or behavior — instant cohorts, typed like a sentence.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="acc-scene" id="details">
+  <div class="container">
+    <div class="acc-head">
+      <p class="mono kicker">04 — THE DETAILS</p>
+      <h2>Every release is a bet against your own charts.</h2>
+    </div>
+    <details class="acc" open>
+      <summary class="acc-sum">
+        <span class="mono acc-no">01</span>
+        <h3>Real-time funnels</h3>
+        <span class="acc-icon" aria-hidden="true">+</span>
+      </summary>
+      <div class="acc-body">
+        <p>Every step, every visitor — funnels that read like questions, not configuration screens.</p>
+        <ul>
+          <li>Live drop-off at every step, from visit to paid</li>
+          <li>Funnel share-links that work in demo calls</li>
+          <li>One-click CSV export</li>
+        </ul>
+      </div>
+    </details>
+    <details class="acc">
+      <summary class="acc-sum">
+        <span class="mono acc-no">02</span>
+        <h3>Session replay</h3>
+        <span class="acc-icon" aria-hidden="true">+</span>
+      </summary>
+      <div class="acc-body">
+        <p>Real sessions, watched the way you'd review footage — to find the friction no chart will show you.</p>
+        <ul>
+          <li>Full-session recordings with a timeline scrubber</li>
+          <li>Search replays by event, page, or console error</li>
+          <li>Privacy controls baked in by default</li>
+        </ul>
+      </div>
+    </details>
+    <details class="acc">
+      <summary class="acc-sum">
+        <span class="mono acc-no">03</span>
+        <h3>Smart cohorts</h3>
+        <span class="acc-icon" aria-hidden="true">+</span>
+      </summary>
+      <div class="acc-body">
+        <p>Slice by acquisition channel, plan, or behavior — instant, and typed in plain English.</p>
+        <ul>
+          <li>Plain-English cohort queries</li>
+          <li>Retention curves out of the box</li>
+          <li>Segments that sync to your existing tools</li>
+        </ul>
+      </div>
+    </details>
+    <details class="acc">
+      <summary class="acc-sum">
+        <span class="mono acc-no">04</span>
+        <h3>The Skittie Index</h3>
+        <span class="acc-icon" aria-hidden="true">+</span>
+      </summary>
+      <div class="acc-body">
+        <p>Your visitors, explained. A live score of how much of their behavior you can see, understand, and act on — the number on the previous screen, always watching.</p>
+        <ul>
+          <li>The 63% you're leaking today, and why</li>
+          <li>Data points tracked automatically, no schema</li>
+          <li>A weekly digest of what changed</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section class="roadmap-scene" id="roadmap">
+  <div class="roadmap-stage">
+    <div class="container">
+      <p class="mono roadmap-kicker">05 — THE <em>PATH</em></p>
+      <ol class="roadmap-steps">
+        <div class="rail" aria-hidden="true"><div class="rail-fill"></div></div>
+        <li class="rstep">
+          <p class="mono rstep-no">01 — CONNECT THE PLUMBING</p>
+          <h3>Drop in one snippet.</h3>
+          <p>No schema, no SQL, no pipeline to babysit. If your site runs, Skittie runs.</p>
+        </li>
+        <li class="rstep">
+          <p class="mono rstep-no">02 — WATCH IT LIVE</p>
+          <h3>Every funnel, session, and cohort — streaming.</h3>
+          <p>The dashboard turns on before your coffee does.</p>
+        </li>
+        <li class="rstep">
+          <p class="mono rstep-no">03 — FIND THE FRICTION</p>
+          <h3>Replay the exact moment users stall.</h3>
+          <p>The chart will never tell you this. The replay always does.</p>
+        </li>
+        <li class="rstep">
+          <p class="mono rstep-no">04 — FIX AND MEASURE</p>
+          <h3>Ship the fix. Watch the index climb.</h3>
+          <p>Then do it again. That's the whole loop — the loop that was missing.</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="evidence-scene" id="evidence">
+  <div class="container">
+    <p class="mono kicker evidence-kicker">06 — THE <em>EVIDENCE</em></p>
+    <blockquote class="evidence-blockquote">“We found the step where users churned in <span class="blue">fifteen minutes</span>. Skittie paid for itself in one afternoon.”</blockquote>
+    <p class="mono evidence-attribution">SARAH CHEN — FOUNDER, STITCHBOARD</p>
+    <div class="metrics">
+      <div class="metric-cell">
+        <p class="metric-value"><span class="count" data-target="18.4" data-decimals="1">18.4</span><span class="blue">%</span></p>
+        <p class="mono metric-label">TRIAL → PAID — LIVE, NO QUERIES WRITTEN</p>
+      </div>
+      <div class="metric-cell">
+        <p class="metric-value"><span class="count" data-target="9" data-decimals="0">9</span><span class="blue"> min</span></p>
+        <p class="mono metric-label">MEDIAN TIME TO VALUE — 4,120 TEAMS</p>
+      </div>
+      <div class="metric-cell">
+        <p class="metric-value"><span class="count" data-target="2.1" data-decimals="1">2.1</span><span class="blue">%</span></p>
+        <p class="mono metric-label">CHURN · 90 DAYS — ALL PAID PLANS</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="close-scene" id="close">
+  <span class="ghost-type" aria-hidden="true">SKITTIE</span>
+  <div class="container">
+    <p class="mono close-kicker">07 — THE CLOSE</p>
+    <h2>
+      <span class="mask-line"><span>Stop guessing.</span></span>
+      <span class="mask-line"><span>Start <span class="hollow">knowing</span>.</span></span>
+    </h2>
+    <div class="cta-wrap">
+      <button class="btn-pill btn-pill-inverse magnetic" type="button"><span>Start your free trial</span></button>
+      <a class="btn-text btn-ghost-white" href="#carousel">Talk to sales →</a>
+    </div>
+    <p class="mono close-note">NO CREDIT CARD — SET UP IN FOUR MINUTES. CANCEL IN TWO CLICKS.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-inner">
+    <div class="wordmark">Skittie</div>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Status</a>
+      <a href="#">Journal</a>
+    </div>
+    <div class="footer-colophon mono">
+      <span>A SKITTIE FILM — PRODUCED IN 60 FPS</span>
+      <span>© 2026 SKITTIE ANALYTICS − VOL. 02</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/InertiaPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger, Draggable, InertiaPlugin);
+
+gsap.context(() => {
+  const mm = gsap.matchMedia();
+
+  const setupSceneReveals = () => {
+    gsap.utils.toArray(".brief").forEach((b) => {
+      gsap.from(b.querySelectorAll(".brief-h, .brief-p"), {
+        opacity: 0, y: 40, duration: 1, ease: "power3.out", stagger: 0.1,
+        scrollTrigger: { trigger: b, start: "top 78%", once: true }
+      });
+    });
+    gsap.from(".acc", {
+      opacity: 0, y: 40, duration: 0.9, ease: "power3.out", stagger: 0.1,
+      scrollTrigger: { trigger: "#details", start: "top 78%", once: true }
+    });
+    gsap.from(".evidence-blockquote", { opacity: 0, y: 40, duration: 1.1, ease: "power3.out", scrollTrigger: { trigger: "#evidence", start: "top 78%", once: true } });
+    gsap.from(".evidence-attribution", { opacity: 0, duration: 0.8, delay: 0.35, scrollTrigger: { trigger: "#evidence", start: "top 78%", once: true } });
+    gsap.from(".close-scene .mask-line > span",
+      { yPercent: 112, duration: 1.1, stagger: 0.14, ease: "expo.out", scrollTrigger: { trigger: "#close", start: "top 72%", once: true } });
+    gsap.from(".cta-wrap", { opacity: 0, y: 24, duration: 0.9, ease: "power3.out", scrollTrigger: { trigger: "#close", start: "top 72%", once: true } });
+    gsap.from(".close-note", { opacity: 0, duration: 0.8, scrollTrigger: { trigger: "#close", start: "top 72%", once: true } });
+    gsap.from(".ghost-type", { opacity: 0, duration: 1.4, ease: "power2.out", scrollTrigger: { trigger: "#close", start: "top 80%", once: true } });
+    gsap.utils.toArray(".count").forEach((el) => {
+      const target = parseFloat(el.dataset.target);
+      const decimals = parseInt(el.dataset.decimals || "0", 10);
+      const obj = { v: 0 };
+      gsap.to(obj, {
+        v: target, duration: 1.8, ease: "power2.out",
+        scrollTrigger: { trigger: el, start: "top 85%", once: true },
+        onUpdate() { el.textContent = obj.v.toFixed(decimals); }
+      });
+    });
+  };
+
+  mm.add("(prefers-reduced-motion: no-preference) and (min-width: 768px)", () => {
+    const preloader = document.getElementById("preloader");
+    const countEl = document.getElementById("pre-count");
+    const counter = { v: 0 };
+
+    const lenis = new Lenis({ duration: 1.15, smoothWheel: true, anchors: true });
+    lenis.on("scroll", ScrollTrigger.update);
+    const raf = (time) => lenis.raf(time * 1000);
+    gsap.ticker.add(raf);
+    gsap.ticker.lagSmoothing(0);
+    lenis.stop();
+
+    const intro = gsap.timeline({ defaults: { ease: "expo.out" } });
+    intro.from(".hero .mask-line > span", { yPercent: 112, duration: 1.2, stagger: 0.15 })
+      .from(".hero-kicker", { opacity: 0, y: 18, duration: 0.8 }, "-=0.7")
+      .from(".hero-sub", { opacity: 0, y: 26, duration: 1 }, "-=0.6")
+      .from(".hero-actions", { opacity: 0, y: 22, duration: 0.9 }, "-=0.55")
+      .from(".hero-meta", { opacity: 0, duration: 0.7 }, "-=0.4")
+      .from(".nav-inner", { opacity: 0, y: -14, duration: 0.8 }, "-=1.4")
+      .from(".live-screen", { opacity: 0, x: 60, duration: 1.2 }, "-=1.6")
+      .from(".orbit-ring", { opacity: 0, scale: 0.9, duration: 1.4 }, "-=1.6");
+
+    const live = document.getElementById("live-count");
+    let liveN = 1284;
+    const liveTimer = setInterval(() => {
+      liveN += Math.floor(Math.random() * 7);
+      live.textContent = liveN.toLocaleString();
+    }, 1400);
+
+    const canvas = document.getElementById("particles");
+    const ctx2 = canvas.getContext("2d");
+    let dots = [];
+    const init = () => {
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = canvas.offsetWidth * dpr;
+      canvas.height = canvas.offsetHeight * dpr;
+      ctx2.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const w = canvas.offsetWidth, h = canvas.offsetHeight;
+      dots = Array.from({ length: 60 }, () => ({
+        x: Math.random() * w, y: Math.random() * h,
+        r: 1 + Math.random() * 1.6,
+        vy: 0.15 + Math.random() * 0.4,
+        o: 0.05 + Math.random() * 0.16
+      }));
+    };
+    const tick = () => {
+      const w = canvas.offsetWidth, h = canvas.offsetHeight;
+      ctx2.clearRect(0, 0, w, h);
+      dots.forEach((d) => {
+        d.y -= d.vy;
+        if (d.y < -4) { d.y = h + 4; d.x = Math.random() * w; }
+        ctx2.globalAlpha = d.o;
+        ctx2.fillStyle = "#0F4BFD";
+        ctx2.beginPath();
+        ctx2.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+        ctx2.fill();
+      });
+      ctx2.globalAlpha = 1;
+    };
+    init();
+    gsap.ticker.add(tick);
+    window.addEventListener("resize", init);
+
+    preloader.classList.add("is-active");
+    const boot = gsap.timeline();
+    boot.to(counter, {
+        v: 100, duration: 1.4, ease: "power2.inOut",
+        onUpdate() { countEl.textContent = String(Math.round(counter.v)).padStart(2, "0"); }
+      })
+      .to(".pre-inner", { opacity: 0, y: -24, duration: 0.4, ease: "power2.in" }, "+=0.15")
+      .to("#preloader", { yPercent: -101, duration: 0.9, ease: "power4.inOut" }, "<0.1")
+      .add(intro, "-=0.35")
+      .add(() => { preloader.remove(); lenis.start(); ScrollTrigger.refresh(); }, "-=0.15");
+
+    document.body.classList.add("cursor-on");
+    const ringX = gsap.quickTo(".cursor-ring", "x", { duration: 0.45, ease: "power3.out" });
+    const ringY = gsap.quickTo(".cursor-ring", "y", { duration: 0.45, ease: "power3.out" });
+    const dotX = gsap.quickTo(".cursor-dot", "x", { duration: 0.12, ease: "power3.out" });
+    const dotY = gsap.quickTo(".cursor-dot", "y", { duration: 0.12, ease: "power3.out" });
+    window.addEventListener("mousemove", (e) => {
+      ringX(e.clientX - 17); ringY(e.clientY - 17);
+      dotX(e.clientX - 2.5); dotY(e.clientY - 2.5);
+    });
+    document.querySelectorAll("a, button").forEach((el) => {
+      el.addEventListener("mouseenter", () => gsap.to(".cursor-ring", { scale: 1.7, duration: 0.3, ease: "power3.out" }));
+      el.addEventListener("mouseleave", () => gsap.to(".cursor-ring", { scale: 1, duration: 0.3, ease: "power3.out" }));
+    });
+    const carouselWrap = document.querySelector(".carousel-wrap");
+    carouselWrap.addEventListener("mouseenter", () => document.querySelector(".cursor-ring").classList.add("is-drag"));
+    carouselWrap.addEventListener("mouseleave", () => document.querySelector(".cursor-ring").classList.remove("is-drag"));
+
+    document.querySelectorAll(".magnetic").forEach((btn) => {
+      const xTo = gsap.quickTo(btn, "x", { duration: 0.35, ease: "power3.out" });
+      const yTo = gsap.quickTo(btn, "y", { duration: 0.35, ease: "power3.out" });
+      btn.addEventListener("mousemove", (e) => {
+        const r = btn.getBoundingClientRect();
+        xTo((e.clientX - r.left - r.width / 2) * 0.1);
+        yTo((e.clientY - r.top - r.height / 2) * 0.1);
+      });
+      btn.addEventListener("mouseleave", () => { xTo(0); yTo(0); });
+    });
+
+    gsap.to(".nav-progress", { scaleX: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: 0.4 } });
+
+    const indexTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".index-stage", start: "top top", end: "+=240%",
+        scrub: 0.8, pin: true, invalidateOnRefresh: true
+      }
+    });
+    const indexNum = document.getElementById("index-num");
+    const idx = { v: 0 };
+    indexTl.to(idx, {
+        v: 63, duration: 1, ease: "none", snap: { v: 1 },
+        onUpdate() { indexNum.textContent = Math.round(idx.v); }
+      })
+      .from(".index-line .mask-line > span", { yPercent: 112, stagger: 0.4, ease: "none", duration: 1 }, 0);
+    gsap.to(".index-fill", {
+      scaleX: 1, ease: "none",
+      scrollTrigger: { trigger: ".index-stage", start: "top top", end: "+=240%", scrub: 0.8 }
+    });
+
+    gsap.from(".rstep", {
+      opacity: 0, y: 60, stagger: 0.55, ease: "none",
+      scrollTrigger: {
+        trigger: ".roadmap-stage", start: "top top", end: "+=260%",
+        scrub: 0.8, pin: true, invalidateOnRefresh: true
+      }
+    });
+    gsap.to(".rail-fill", {
+      scaleY: 1, ease: "none",
+      scrollTrigger: { trigger: ".roadmap-stage", start: "top top", end: "+=260%", scrub: 0.8 }
+    });
+
+    const track = document.querySelector(".carousel-track");
+    document.querySelector(".carousel-scene").classList.add("drag-live");
+    Draggable.create(track, {
+      type: "x",
+      edgeResistance: 0.9,
+      inertia: true,
+      bounds: () => {
+        const m = track.scrollWidth - carouselWrap.offsetWidth;
+        return { minX: -m, maxX: 0 };
+      }
+    });
+
+    setupSceneReveals();
+
+    return () => {
+      gsap.ticker.remove(raf);
+      gsap.ticker.remove(tick);
+      lenis.destroy();
+      clearInterval(liveTimer);
+    };
+  });
+
+  mm.add("(prefers-reduced-motion: no-preference) and (max-width: 767px)", () => {
+    const intro = gsap.timeline({ defaults: { ease: "expo.out" } });
+    intro.from(".hero .mask-line > span", { yPercent: 112, duration: 1, stagger: 0.14 })
+      .from(".hero-kicker", { opacity: 0, y: 16, duration: 0.7 }, "-=0.6")
+      .from(".hero-sub", { opacity: 0, y: 24, duration: 0.9 }, "-=0.5")
+      .from(".hero-actions", { opacity: 0, y: 20, duration: 0.8 }, "-=0.45")
+      .from(".hero-meta", { opacity: 0, duration: 0.6 }, "-=0.3")
+      .from(".live-screen", { opacity: 0, y: 40, duration: 1 }, "-=0.8");
+
+    gsap.from(".card", { opacity: 0, y: 40, stagger: 0.12, duration: 1, ease: "power3.out", scrollTrigger: { trigger: "#carousel", start: "top 78%", once: true } });
+
+    setupSceneReveals();
+  });
+}, document.body);
+
+window.addEventListener("load", () => ScrollTrigger.refresh());
+if (document.fonts) document.fonts.ready.then(() => ScrollTrigger.refresh());
+</script>
+</body>
+</html>

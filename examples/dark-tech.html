@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skittie — Product analytics for indie founders</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08090A;
+    --panel: #0E0F11;
+    --panel-2: #131417;
+    --hover: #181A1D;
+    --text: #F7F7F8;
+    --text-2: #9CA3AD;
+    --text-3: #5C6370;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-2: rgba(255, 255, 255, 0.16);
+    --accent: #5E6AD2;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Space Grotesk', -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-size: 15px;
+  }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: var(--text-3); }
+  .container { max-width: 1160px; margin: 0 auto; padding: 0 32px; }
+
+  nav { border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(8,9,10,0.85); backdrop-filter: blur(10px); z-index: 10; }
+  .nav-inner { display: flex; justify-content: space-between; align-items: center; height: 60px; }
+  .wordmark { font-weight: 600; font-size: 16px; letter-spacing: -0.01em; }
+  .wordmark .dot { color: var(--accent); }
+  .nav-links { display: flex; gap: 28px; align-items: center; }
+  .nav-links a { text-decoration: none; color: var(--text-2); font-size: 13.5px; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: var(--accent); color: #fff; border: none; border-radius: 5px;
+    padding: 8px 16px; font-size: 13.5px; font-weight: 500; cursor: pointer;
+    box-shadow: 0 0 0 1px rgba(94,106,210,0.35), 0 0 24px rgba(94,106,210,0.2);
+  }
+  .nav-cta:hover { background: #6B76DC; }
+
+  header { padding: 120px 0 72px; }
+  .kicker { color: var(--accent); margin-bottom: 20px; }
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.05;
+    max-width: 14em;
+  }
+  .hero-sub { margin-top: 24px; color: var(--text-2); font-size: 15.5px; line-height: 1.6; max-width: 34em; }
+  .hero-actions { margin-top: 36px; display: flex; gap: 14px; align-items: center; }
+  .cta-ghost {
+    background: none; border: 1px solid var(--border-2); color: var(--text); border-radius: 6px;
+    padding: 12px 20px; font-size: 14px; font-weight: 500; cursor: pointer;
+  }
+  .cta-ghost:hover { background: var(--panel); border-color: rgba(255,255,255,0.3); }
+
+  .panel {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  .metrics-panel { margin-top: 64px; }
+  .panel-head { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .status { color: #34D399; display: flex; align-items: center; gap: 8px; }
+  .status .pulse { width: 7px; height: 7px; border-radius: 50%; background: #34D399; opacity: 0.9; }
+  .metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .metric-cell { padding: 24px 20px; border-right: 1px solid var(--border); }
+  .metric-cell:last-child { border-right: none; }
+  .metric-label { font-size: 12px; color: var(--text-3); margin-bottom: 10px; }
+  .metric-value { font-size: 26px; font-weight: 500; letter-spacing: -0.02em; font-family: 'JetBrains Mono', monospace; }
+  .metric-value .accent { color: var(--accent); }
+  .metric-foot { margin-top: 8px; font-size: 12px; color: var(--text-3); }
+
+  .logos { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 20px 0; }
+  .logos-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  .logos-row { display: flex; gap: 36px; color: var(--text-3); font-size: 13.5px; font-weight: 500; letter-spacing: 0.02em; }
+
+  section.section { border-bottom: 1px solid var(--border); }
+  .section-head { padding: 88px 0 48px; display: flex; justify-content: space-between; align-items: end; gap: 48px; flex-wrap: wrap; }
+  .section-head h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 600; letter-spacing: -0.02em; }
+  .section-manifest { color: var(--text-2); font-size: 14px; line-height: 1.6; max-width: 34em; }
+
+  .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding-bottom: 88px; }
+  .feature-card { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 24px; }
+  .feature-card:hover { background: var(--hover); border-color: var(--border-2); }
+  .feature-id { font-size: 12px; color: var(--text-3); font-family: 'JetBrains Mono', monospace; }
+  .feature-id::before { content: '▸ '; color: var(--accent); }
+  .feature-name { margin: 14px 0 10px; font-size: 16px; font-weight: 600; }
+  .feature-desc { color: var(--text-2); font-size: 13.5px; line-height: 1.6; }
+
+  .quote-block { padding: 100px 0; }
+  .quote-block blockquote { font-size: clamp(1.3rem, 2.4vw, 1.9rem); font-weight: 500; letter-spacing: -0.01em; line-height: 1.35; max-width: 24em; }
+  .quote-attribution { margin-top: 28px; color: var(--text-3); font-size: 13px; }
+  .quote-attribution .accent { color: var(--accent); }
+
+  .price-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding-bottom: 96px; }
+  .price-card { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 28px 24px; }
+  .price-card.featured { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(94,106,210,0.35); }
+  .price-name { font-size: 13px; color: var(--text-3); font-family: 'JetBrains Mono', monospace; }
+  .price-card.featured .price-name { color: var(--accent); }
+  .price-amount { margin: 16px 0 4px; font-size: 34px; font-weight: 600; letter-spacing: -0.02em; }
+  .price-per { color: var(--text-3); font-size: 13px; }
+  .price-features { margin: 24px 0; padding: 0; list-style: none; }
+  .price-features li { padding: 9px 0; border-top: 1px solid var(--border); font-size: 13.5px; color: var(--text-2); display: flex; gap: 10px; align-items: center; }
+  .price-features li::before { content: '✓'; color: var(--accent); font-size: 12px; }
+  .price-btn { width: 100%; padding: 12px; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid var(--border-2); background: none; color: var(--text); }
+  .price-btn:hover { background: var(--hover); }
+  .price-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .price-btn.primary:hover { background: #6B76DC; }
+
+  .final-cta { padding: 120px 0; text-align: center; }
+  .final-cta .mono { margin-bottom: 20px; }
+  .final-cta h2 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 600; letter-spacing: -0.025em; max-width: 16em; margin: 0 auto 32px; line-height: 1.1; }
+  .final-cta .cta-primary {
+    background: var(--accent); color: #fff; border: none; border-radius: 6px;
+    padding: 14px 32px; font-size: 14.5px; font-weight: 500; cursor: pointer;
+    box-shadow: 0 0 0 1px rgba(94,106,210,0.35), 0 0 24px rgba(94,106,210,0.25);
+  }
+
+  footer { padding: 40px 0 56px; border-top: 1px solid var(--border); }
+  .footer-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; align-items: center; }
+  .footer-links { display: flex; gap: 28px; }
+  .footer-links a { text-decoration: none; color: var(--text-3); font-size: 13px; }
+  .footer-links a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-inner">
+    <div class="wordmark">skittie<span class="dot">.</span>dev</div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#">Docs</a>
+      <button class="nav-cta">Deploy now</button>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="container">
+    <p class="kicker mono">// Product analytics for indie founders</p>
+    <h1>Know exactly what your users do.</h1>
+    <p class="hero-sub">Funnels, cohorts and session replay for independent products — the clarity of a data team with zero schema, zero SQL, zero babysitting.</p>
+    <div class="hero-actions">
+      <button class="nav-cta" style="padding:12px 22px;border-radius:6px">Start free trial</button>
+      <button class="cta-ghost">Book a demo</button>
+    </div>
+
+    <div class="panel metrics-panel">
+      <div class="panel-head">
+        <span class="mono">skittie:live — metrics</span>
+        <span class="status mono">● live</span>
+      </div>
+      <div class="metric-grid">
+        <div class="metric-cell">
+          <p class="metric-label">trial_to_paid</p>
+          <p class="metric-value">18.4<span class="accent">%</span></p>
+          <p class="metric-foot">30-day window — p75</p>
+        </div>
+        <div class="metric-cell">
+          <p class="metric-label">time_to_value</p>
+          <p class="metric-value">9<span class="accent">m</span></p>
+          <p class="metric-foot">median, n=4,120</p>
+        </div>
+        <div class="metric-cell">
+          <p class="metric-label">churn_90d</p>
+          <p class="metric-value">2.1<span class="accent">%</span></p>
+          <p class="metric-foot">all paid plans</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="logos">
+  <div class="container logos-inner">
+    <span class="mono">Trusted by 4,000+ indie teams</span>
+    <div class="logos-row">
+      <span><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M12 3L21 19H3Z"/></svg>acme</span><span><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M3 16a9 9 0 0 1 18 0h-3a6 6 0 0 0-12 0z"/></svg>fathom</span><span><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M4 8h5v2H4zM4 14h8v2H4zM4 20h12v2H4z"/></svg>baseline</span><span><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zm0 3.5a5 5 0 1 1 0 10 5 5 0 0 1 0-10z"/><path d="M12 10.8a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4z"/></svg>radar</span><span><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M9 5h3.5L21 12l-8.5 7H9l8.5-7z"/></svg>promptly</span>
+    </div>
+  </div>
+</div>
+
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-head">
+      <h2>Everything you need to grow</h2>
+      <p class="section-manifest">Three instruments, one language. No event schemas to design, no pipelines to babysit. Point it at your product and it starts reporting.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <p class="feature-id">funnels.realtime</p>
+        <h3 class="feature-name">Real-time funnels</h3>
+        <p class="feature-desc">See where users drop off at every step, live. Funnels that read like questions, not config screens.</p>
+      </div>
+      <div class="feature-card">
+        <p class="feature-id">replay.sessions</p>
+        <h3 class="feature-name">Session replay</h3>
+        <p class="feature-desc">Recordings of real sessions, watched the way you'd review footage — to find the friction no chart will show you.</p>
+      </div>
+      <div class="feature-card">
+        <p class="feature-id">cohorts.smart</p>
+        <h3 class="feature-name">Smart cohorts</h3>
+        <p class="feature-desc">Slice by acquisition channel, plan, or behavior — instant, and typed in English.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container quote-block">
+    <blockquote>We found the exact step where users churned in a fifteen-minute session. Skittie paid for itself in one afternoon.</blockquote>
+    <p class="quote-attribution">— <span class="accent">Sarah Chen</span>, founder of Stitchboard</p>
+  </div>
+</section>
+
+<section class="section" id="pricing">
+  <div class="container">
+    <div class="section-head">
+      <h2>Simple pricing</h2>
+      <p class="section-manifest">Free to start, fair as you grow. No per-seat theater, no hidden events line.</p>
+    </div>
+    <div class="price-grid">
+      <div class="price-card">
+        <p class="price-name">STARTER</p>
+        <p class="price-amount">$0</p>
+        <p class="price-per">per month</p>
+        <ul class="price-features">
+          <li>One project</li>
+          <li>10k events / month</li>
+          <li>7-day retention</li>
+        </ul>
+        <button class="price-btn">Get started</button>
+      </div>
+      <div class="price-card featured">
+        <p class="price-name">PRO — MOST POPULAR</p>
+        <p class="price-amount">$29</p>
+        <p class="price-per">per month</p>
+        <ul class="price-features">
+          <li>Ten projects</li>
+          <li>500k events / month</li>
+          <li>Unlimited retention</li>
+          <li>Session replay</li>
+        </ul>
+        <button class="price-btn primary">Start 14-day trial</button>
+      </div>
+      <div class="price-card">
+        <p class="price-name">SCALE</p>
+        <p class="price-amount">$99</p>
+        <p class="price-per">per month</p>
+        <ul class="price-features">
+          <li>Unlimited projects</li>
+          <li>5M events / month</li>
+          <li>SSO & audit log</li>
+          <li>Priority support</li>
+        </ul>
+        <button class="price-btn">Contact sales</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta">
+  <p class="mono">// no credit card · no data team</p>
+  <h2>Stop guessing. Start knowing.</h2>
+  <button class="cta-primary">Start your free trial →</button>
+</section>
+
+<footer>
+  <div class="container footer-inner">
+    <span class="wordmark">skittie<span class="dot">.</span>dev</span>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Status</a>
+      <a href="#">Journal</a>
+    </div>
+    <span class="mono">v2.4.1 — set in Space Grotesk & JetBrains Mono</span>
+  </div>
+</footer>
+
+</body>
+</html>

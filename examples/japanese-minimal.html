@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skittie — Product analytics for indie founders</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F4F1EA;
+    --paper-deep: #ECE8DF;
+    --ink: #33302B;
+    --ash: #8A8378;
+    --seal: #B3392A;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: 'Zen Kaku Gothic New', -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mincho { font-family: 'Shippori Mincho', Georgia, serif; }
+  .gothic-caps { font-family: 'Zen Kaku Gothic New', sans-serif; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500; }
+  .container { max-width: 1140px; margin: 0 auto; padding: 0 56px; }
+  @media (max-width: 760px) { .container { padding: 0 26px; } }
+
+  nav { border-bottom: 1px solid var(--ash); }
+  .nav-inner { display: flex; justify-content: space-between; align-items: center; height: 88px; }
+  .wordmark { display: flex; align-items: center; gap: 12px; font-family: 'Shippori Mincho', serif; font-size: 23px; font-weight: 500; letter-spacing: 0.06em; }
+  .wordmark .hanko { width: 26px; height: 26px; background: var(--seal); color: var(--paper); display: grid; place-items: center; font-family: 'Shippori Mincho', serif; font-size: 13px; line-height: 1; }
+  .nav-links { display: flex; gap: 44px; }
+  .nav-links a { text-decoration: none; color: var(--ash); font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 400; }
+  .nav-links a:hover { color: var(--seal); }
+  .nav-cta { background: var(--ink); color: var(--paper); border: none; padding: 14px 24px; cursor: pointer; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; }
+  .nav-cta:hover { background: var(--seal); }
+
+  header { padding: 190px 0 90px; }
+  .hero-col { max-width: 720px; }
+  .kicker { color: var(--seal); font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; margin-bottom: 44px; }
+  h1 {
+    font-family: 'Shippori Mincho', serif; font-weight: 500;
+    font-size: clamp(2.6rem, 6vw, 4.8rem); line-height: 1.22; letter-spacing: 0.01em;
+  }
+  h1 .line { display: block; }
+  h1 .seal-word { color: var(--seal); }
+  .hero-sub { margin-top: 44px; color: var(--ash); font-size: 15.5px; line-height: 2.1; max-width: 30em; }
+  .hero-sub strong { color: var(--ink); font-weight: 400; }
+  .hero-actions { margin-top: 56px; display: flex; align-items: center; gap: 36px; }
+  .cta-solid { background: var(--ink); color: var(--paper); border: none; padding: 18px 34px; cursor: pointer; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500; border-radius: 0; }
+  .cta-solid:hover { background: var(--seal); }
+  .cta-text { text-decoration: none; color: var(--ink); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; border-bottom: 1px solid var(--seal); padding-bottom: 6px; }
+  .cta-text:hover { color: var(--seal); }
+
+  .vertical-note {
+    writing-mode: vertical-rl; font-family: 'Shippori Mincho', serif; font-size: 13px;
+    letter-spacing: 0.3em; color: var(--ash); margin-top: 84px;
+  }
+
+  .metrics { border-top: 1px solid var(--ash); border-bottom: 1px solid var(--ash); padding: 48px 0; display: grid; grid-template-columns: repeat(3, 1fr); }
+  .metric-cell { padding-right: 48px; }
+  .metric-value { font-family: 'Shippori Mincho', serif; font-size: 44px; font-weight: 500; letter-spacing: 0.01em; }
+  .metric-value .red { color: var(--seal); font-size: 0.6em; vertical-align: 0.3em; }
+  .metric-label { margin-top: 14px; color: var(--ash); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; }
+  .metric-note { margin-top: 10px; color: var(--seal); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; }
+
+  .logos { padding: 40px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+  .logos-label { color: var(--ash); font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; }
+  .logos-row { display: flex; gap: 52px; }
+  .logos-row span { font-family: 'Shippori Mincho', serif; font-size: 17px; color: var(--ink); opacity: 0.55; }
+
+  section.section { border-bottom: 1px solid var(--ash); }
+  .section-head { padding: 150px 0 64px; display: grid; grid-template-columns: 5fr 6fr; column-gap: 80px; align-items: end; }
+  .section-num { color: var(--seal); margin-bottom: 32px; font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; }
+  .section-head h2 { font-family: 'Shippori Mincho', serif; font-weight: 500; font-size: clamp(1.9rem, 3.6vw, 2.9rem); line-height: 1.3; }
+  .section-manifest { color: var(--ash); font-size: 15px; line-height: 2.0; max-width: 30em; }
+
+  .feature-list { padding-bottom: 130px; }
+  .feature-row { display: grid; grid-template-columns: 70px 3fr 6fr; column-gap: 36px; padding: 34px 0; border-top: 1px solid var(--ash); align-items: baseline; }
+  .feature-no { font-family: 'Shippori Mincho', serif; font-size: 17px; color: var(--seal); }
+  .feature-name { font-family: 'Shippori Mincho', serif; font-size: 23px; font-weight: 500; }
+  .feature-desc { color: var(--ash); font-size: 14.5px; line-height: 2.0; max-width: 36em; }
+
+  .quote-block { padding: 170px 0; }
+  .quote-block blockquote { font-family: 'Shippori Mincho', serif; font-weight: 400; font-size: clamp(1.7rem, 3.4vw, 2.7rem); line-height: 1.5; max-width: 18em; }
+  .quote-rule { width: 56px; height: 1px; background: var(--seal); margin: 44px 0 22px; }
+  .quote-attribution { color: var(--ash); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; }
+
+  .price-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--ash); padding-bottom: 130px; }
+  .price-col { padding: 44px 36px 0; border-left: 1px solid var(--ash); }
+  .price-col:first-child { border-left: none; padding-left: 0; }
+  .price-col.featured { background: var(--paper-deep); padding: 44px 36px 56px; }
+  .price-name { color: var(--ash); margin-bottom: 34px; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; }
+  .price-featured-name { color: var(--seal); }
+  .price-amount { font-family: 'Shippori Mincho', serif; font-size: 48px; font-weight: 500; letter-spacing: 0.01em; }
+  .price-per { color: var(--ash); margin-top: 12px; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; }
+  .price-feature { padding: 15px 0; border-top: 1px solid var(--ash); font-size: 14px; color: var(--ink); }
+  .price-feature:last-of-type { border-bottom: 1px solid var(--ash); }
+  .price-cta { margin-top: 44px; display: block; }
+
+  .final-cta { padding: 190px 0; }
+  .final-cta .kicker { text-align: center; }
+  .final-cta h2 { font-family: 'Shippori Mincho', serif; font-weight: 400; font-size: clamp(2.2rem, 4.8vw, 3.8rem); line-height: 1.35; text-align: center; max-width: 14em; margin: 0 auto 56px; }
+  .final-cta .cta-wrap { text-align: center; }
+
+  footer { border-top: 1px solid var(--ash); padding: 44px 0 64px; }
+  .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+  .footer-links { display: flex; gap: 36px; }
+  .footer-links a { text-decoration: none; color: var(--ash); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; }
+  .footer-links a:hover { color: var(--seal); }
+  .footer-right { display: flex; align-items: center; gap: 20px; color: var(--ash); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; }
+  .hanko {
+    width: 38px; height: 38px; background: var(--seal); color: var(--paper);
+    display: grid; place-items: center; font-family: 'Shippori Mincho', serif; font-size: 20px; line-height: 1;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-inner">
+    <div class="wordmark"><span class="hanko">知</span>Skittie</div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#">Journal</a>
+    </div>
+    <button class="nav-cta">Start free</button>
+  </div>
+</nav>
+
+<header>
+  <div class="container hero-col">
+    <p class="kicker">Analytics for founders — not data teams</p>
+    <h1>
+      <span class="line">Know exactly</span>
+      <span class="line">what your <span class="seal-word">users</span> do.</span>
+    </h1>
+    <p class="hero-sub">Funnels, cohorts and session replay for independent products — the clarity of a data team, without the schema, the SQL, or the second mortgage.</p>
+    <div class="hero-actions">
+      <button class="cta-solid">Start free trial</button>
+      <a class="cta-text" href="#pricing">Book a demo</a>
+    </div>
+    <p class="vertical-note">静かに、しかし確実に — quietly, but surely.</p>
+  </div>
+</header>
+
+<div class="metrics">
+  <div class="container" style="display:grid;grid-template-columns:repeat(3,1fr);gap:48px;padding:0">
+    <div class="metric-cell">
+      <span class="metric-value">18.4<span class="red">%</span></span>
+      <p class="metric-label">Trial → Paid</p>
+      <p class="metric-note">Live, no queries written</p>
+    </div>
+    <div class="metric-cell">
+      <span class="metric-value">9<span class="red"> min</span></span>
+      <p class="metric-label">Median time to value</p>
+    </div>
+    <div class="metric-cell">
+      <span class="metric-value">2.1<span class="red">%</span></span>
+      <p class="metric-label">Churn · 90 days</p>
+    </div>
+  </div>
+</div>
+
+<div class="container logos">
+  <span class="logos-label">Trusted by 4,000+ indie teams</span>
+  <div class="logos-row">
+    <span><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M12 3L21 19H3Z"/></svg>Acme</span><span><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M3 16a9 9 0 0 1 18 0h-3a6 6 0 0 0-12 0z"/></svg>Fathom</span><span><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M4 8h5v2H4zM4 14h8v2H4zM4 20h12v2H4z"/></svg>Baseline</span><span><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zm0 3.5a5 5 0 1 1 0 10 5 5 0 0 1 0-10z"/><path d="M12 10.8a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4z"/></svg>Radar</span><span><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M9 5h3.5L21 12l-8.5 7H9l8.5-7z"/></svg>Promptly</span>
+  </div>
+</div>
+
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="section-num">一 — Approach</p>
+        <h2>Everything you need to grow — nothing you don't.</h2>
+      </div>
+      <p class="section-manifest">Three instruments, one language. No event schemas to design, no pipelines to babysit. Point it at your product and it begins reporting.</p>
+    </div>
+    <div class="feature-list">
+      <div class="feature-row">
+        <span class="feature-no">01</span>
+        <h3 class="feature-name">Real-time funnels</h3>
+        <p class="feature-desc">See where users drop off at every step, live. Funnels that read like questions, not configuration screens.</p>
+      </div>
+      <div class="feature-row">
+        <span class="feature-no">02</span>
+        <h3 class="feature-name">Session replay</h3>
+        <p class="feature-desc">Recordings of real sessions, watched the way one reviews footage — to find the friction no chart will show you.</p>
+      </div>
+      <div class="feature-row">
+        <span class="feature-no">03</span>
+        <h3 class="feature-name">Smart cohorts</h3>
+        <p class="feature-desc">Slice by acquisition channel, plan, or behavior — instant, and asked in plain English.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container quote-block">
+    <blockquote>“We found the exact step where users churned in a fifteen-minute session. Skittie paid for itself in one afternoon.”</blockquote>
+    <div class="quote-rule"></div>
+    <p class="quote-attribution">Sarah Chen — Founder, Stitchboard</p>
+  </div>
+</section>
+
+<section class="section" id="pricing">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="section-num">二 — Pricing</p>
+        <h2>Simple pricing</h2>
+      </div>
+      <p class="section-manifest">Free to begin, fair as you grow. No per-seat theater, no hidden events line.</p>
+    </div>
+    <div class="price-grid">
+      <div class="price-col">
+        <p class="price-name">Starter</p>
+        <p class="price-amount">$0</p>
+        <p class="price-per">Per month</p>
+        <div style="height:24px"></div>
+        <p class="price-feature">One project</p>
+        <p class="price-feature">10,000 events / month</p>
+        <p class="price-feature">7-day retention</p>
+        <button class="cta-solid price-cta">Get started</button>
+      </div>
+      <div class="price-col featured">
+        <p class="price-name price-featured-name">Pro — most popular</p>
+        <p class="price-amount">$29</p>
+        <p class="price-per">Per month</p>
+        <div style="height:24px"></div>
+        <p class="price-feature">Ten projects</p>
+        <p class="price-feature">500,000 events / month</p>
+        <p class="price-feature">Unlimited retention</p>
+        <p class="price-feature">Session replay</p>
+        <button class="cta-solid price-cta">Start 14-day trial</button>
+      </div>
+      <div class="price-col">
+        <p class="price-name">Scale</p>
+        <p class="price-amount">$99</p>
+        <p class="price-per">Per month</p>
+        <div style="height:24px"></div>
+        <p class="price-feature">Unlimited projects</p>
+        <p class="price-feature">5M events / month</p>
+        <p class="price-feature">SSO & audit log</p>
+        <p class="price-feature">Priority support</p>
+        <button class="cta-solid price-cta">Contact sales</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta">
+  <p class="kicker" style="color:var(--seal)">No credit card. No data team.</p>
+  <h2>Stop guessing.<br>Start knowing.</h2>
+  <div class="cta-wrap">
+    <button class="cta-solid">Start your free trial</button>
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-inner">
+    <span class="wordmark" style="font-size:17px">Skittie</span>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Status</a>
+      <a href="#">Journal</a>
+    </div>
+    <div class="footer-right">
+      <span>© 2026 Skittie Analytics</span>
+      <span class="hanko">知</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

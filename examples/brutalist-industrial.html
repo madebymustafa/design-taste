@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skittie — Product analytics for indie founders</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F2F1EC;
+    --ink: #141414;
+    --ink-soft: #6E6C64;
+    --signal: #E8540B;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: 'Archivo', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px; font-weight: 500;
+  }
+  .container { max-width: 1180px; margin: 0 auto; padding: 0 40px; }
+
+  nav { border-bottom: 2px solid var(--ink); }
+  .nav-inner { display: flex; justify-content: space-between; align-items: center; height: 64px; }
+  .wordmark { font-weight: 900; text-transform: uppercase; font-size: 20px; letter-spacing: 0.02em; }
+  .wordmark .sig { color: var(--signal); }
+  .coords { color: var(--ink-soft); }
+  .nav-links { display: flex; gap: 36px; }
+  .nav-links a { text-decoration: none; color: var(--ink); font-weight: 700; text-transform: uppercase; font-size: 13px; letter-spacing: 0.06em; }
+  .nav-links a:hover { color: var(--signal); }
+  .nav-cta { background: var(--ink); color: var(--paper); border: 2px solid var(--ink); padding: 10px 18px; font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 0.08em; cursor: pointer; box-shadow: 4px 4px 0 var(--signal); }
+  .nav-cta:active { box-shadow: none; transform: translate(4px, 4px); }
+
+  header { padding: 96px 0 0; border-bottom: 2px solid var(--ink); position: relative; }
+  .kicker { margin-bottom: 24px; }
+  .kicker .marker { color: var(--signal); }
+  h1 {
+    font-weight: 900; text-transform: uppercase;
+    font-size: clamp(2.6rem, 7vw, 6rem); line-height: 0.98; letter-spacing: -0.01em;
+    max-width: 14em;
+  }
+  .h1-row { display: flex; justify-content: space-between; align-items: end; gap: 48px; margin-top: 48px; }
+  .hero-sub { font-size: 16px; line-height: 1.55; color: var(--ink); max-width: 34em; }
+  .hero-actions { display: flex; gap: 16px; align-items: center; margin-top: 36px; }
+  .cta-solid { background: var(--signal); color: var(--paper); border: 2px solid var(--ink); padding: 16px 28px; font-weight: 900; text-transform: uppercase; font-size: 13px; letter-spacing: 0.08em; cursor: pointer; box-shadow: 5px 5px 0 var(--ink); }
+  .cta-solid:active { box-shadow: none; transform: translate(5px, 5px); }
+  .cta-text { text-decoration: none; color: var(--ink); font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 0.08em; border-bottom: 2px solid var(--ink); padding-bottom: 3px; }
+  .cta-text:hover { color: var(--signal); border-color: var(--signal); }
+
+  .spec-strip { margin-top: 72px; border-top: 1px solid var(--ink); display: grid; grid-template-columns: repeat(4, 1fr); }
+  .spec-cell { padding: 18px 0; border-left: 1px solid var(--ink); padding-left: 20px; }
+  .spec-cell:first-child { border-left: none; padding-left: 0; }
+  .spec-value { font-weight: 900; font-size: 26px; }
+  .spec-value .unit { color: var(--signal); font-size: 16px; }
+  .spec-label { color: var(--ink-soft); margin-top: 6px; }
+
+  .logos-strip { border-bottom: 2px solid var(--ink); padding: 20px 0; display: flex; justify-content: space-between; align-items: center; }
+  .logos-strip .mono { color: var(--ink-soft); }
+  .logo-name { font-weight: 900; text-transform: uppercase; font-size: 15px; }
+
+  section { border-bottom: 2px solid var(--ink); }
+  .section-head { padding: 88px 0 48px; display: flex; justify-content: space-between; align-items: end; gap: 48px; }
+  .section-head h2 { font-weight: 900; text-transform: uppercase; font-size: clamp(1.6rem, 3.4vw, 2.8rem); line-height: 1.0; }
+  .section-head .mono { color: var(--ink-soft); }
+
+  .feature-row { display: grid; grid-template-columns: 120px 3fr 5fr; column-gap: 32px; padding: 28px 0; border-top: 1px solid var(--ink); }
+  .feature-row:last-child { border-bottom: 1px solid var(--ink); }
+  .feature-id { font-weight: 900; font-size: 22px; color: var(--signal); }
+  .feature-name { font-weight: 900; text-transform: uppercase; font-size: 17px; }
+  .feature-desc { font-size: 14.5px; line-height: 1.6; color: var(--ink-soft); max-width: 46em; }
+
+  .quote-block { padding: 96px 0; display: grid; grid-template-columns: 2fr 1fr; gap: 48px; align-items: end; }
+  .quote-block blockquote { font-weight: 900; text-transform: uppercase; font-size: clamp(1.4rem, 2.8vw, 2.2rem); line-height: 1.2; max-width: 20em; }
+  .quote-attribution { text-align: right; }
+  .quote-rule { width: 64px; height: 4px; background: var(--signal); margin-bottom: 14px; margin-left: auto; }
+
+  .price-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 2px solid var(--ink); }
+  .price-col { padding: 40px 32px 56px; border-left: 1px solid var(--ink); }
+  .price-col:first-child { border-left: none; padding-left: 0; }
+  .price-col.featured { background: var(--signal); color: var(--paper); }
+  .price-col.featured .price-feature { border-top: 1px solid rgba(255,255,255,0.4); }
+  .price-col.featured .price-cta { background: var(--ink); }
+  .price-name { margin-bottom: 28px; }
+  .price-amount { font-weight: 900; font-size: 52px; letter-spacing: -0.01em; }
+  .price-per { margin-top: 4px; color: var(--ink-soft); font-size: 12px; }
+  .price-col.featured .price-per { color: rgba(255,255,255,0.8); }
+  .price-feature { padding: 14px 0; border-top: 1px solid var(--ink); font-size: 14.5px; }
+  .price-feature:last-of-type { border-bottom: 1px solid var(--ink); }
+  .price-col.featured .price-feature:last-of-type { border-bottom: 1px solid rgba(255,255,255,0.4); }
+  .price-cta { margin-top: 32px; display: block; width: 100%; text-align: center; }
+
+  .final-cta { padding: 120px 0; text-align: center; border-bottom: none; }
+  .final-cta h2 { font-weight: 900; text-transform: uppercase; font-size: clamp(2rem, 5vw, 4rem); max-width: 14em; margin: 0 auto 40px; line-height: 1.0; }
+  .final-cta .cta-solid { padding: 20px 48px; font-size: 14px; }
+
+  footer { padding: 36px 0 56px; }
+  .footer-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  .footer-links { display: flex; gap: 32px; }
+  .footer-links a { text-decoration: none; color: var(--ink-soft); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.08em; }
+  .footer-links a:hover { color: var(--signal); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-inner">
+    <div class="wordmark">Skittie<span class="sig">®</span></div>
+    <div class="nav-links">
+      <a href="#features">01 — Features</a>
+      <a href="#pricing">02 — Pricing</a>
+      <a href="#">03 — Journal</a>
+    </div>
+    <button class="nav-cta">Start free</button>
+  </div>
+</nav>
+
+<header>
+  <div class="container">
+    <p class="kicker mono"><span class="marker">▪</span> N-01 / Analytics for founders, not data teams</p>
+    <h1>Know exactly what your users do.</h1>
+    <div class="h1-row">
+      <p class="hero-sub">Funnels, cohorts and session replay for independent products — the clarity of a data team without the schema, the SQL, or the second mortgage.</p>
+      <div class="hero-actions">
+        <button class="cta-solid">Start free trial</button>
+        <a class="cta-text" href="#pricing">Book a demo →</a>
+      </div>
+    </div>
+    <div class="spec-strip">
+      <div class="spec-cell">
+        <div class="spec-value">18.4<span class="unit">%</span></div>
+        <div class="spec-label mono">Trial → Paid</div>
+      </div>
+      <div class="spec-cell">
+        <div class="spec-value">9<span class="unit">min</span></div>
+        <div class="spec-label mono">Median time to value</div>
+      </div>
+      <div class="spec-cell">
+        <div class="spec-value">2.1<span class="unit">%</span></div>
+        <div class="spec-label mono">Churn, 90 days</div>
+      </div>
+      <div class="spec-cell">
+        <div class="spec-value">4,000<span class="unit">+</span></div>
+        <div class="spec-label mono">Teams on record</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container logos-strip">
+  <span class="mono">Trusted by 4,000+ indie teams</span>
+  <div style="display:flex;gap:36px">
+    <span class="logo-name"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M12 3L21 19H3Z"/></svg>Acme</span>
+    <span class="logo-name"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M3 16a9 9 0 0 1 18 0h-3a6 6 0 0 0-12 0z"/></svg>Fathom</span>
+    <span class="logo-name"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M4 8h5v2H4zM4 14h8v2H4zM4 20h12v2H4z"/></svg>Baseline</span>
+    <span class="logo-name"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zm0 3.5a5 5 0 1 1 0 10 5 5 0 0 1 0-10z"/><path d="M12 10.8a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4z"/></svg>Radar</span>
+    <span class="logo-name"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;vertical-align:-2px;margin-right:7px" aria-hidden="true"><path d="M9 5h3.5L21 12l-8.5 7H9l8.5-7z"/></svg>Promptly</span>
+  </div>
+</div>
+
+<section id="features">
+  <div class="container">
+    <div class="section-head">
+      <h2>Everything you need to grow</h2>
+      <span class="mono">Fig. 01 — Approach / Three instruments, no schemas</span>
+    </div>
+    <div class="feature-row">
+      <span class="feature-id">F-01</span>
+      <div class="feature-name">Real-time funnels</div>
+      <p class="feature-desc">See where users drop off at every step, live. Funnels that read like questions, not config screens.</p>
+    </div>
+    <div class="feature-row">
+      <span class="feature-id">F-02</span>
+      <div class="feature-name">Session replay</div>
+      <p class="feature-desc">Recordings of real sessions, watched the way you'd review footage — to find the friction no chart will show you.</p>
+    </div>
+    <div class="feature-row">
+      <span class="feature-id">F-03</span>
+      <div class="feature-name">Smart cohorts</div>
+      <p class="feature-desc">Slice by acquisition channel, plan, or behavior — instant, and typed in English.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container quote-block">
+    <blockquote>«We found the exact step where users churned in fifteen minutes. Paid for itself in an afternoon.»</blockquote>
+    <div class="quote-attribution">
+      <div class="quote-rule"></div>
+      <p class="mono">Sarah Chen — Founder, Stitchboard</p>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="container">
+    <div class="section-head">
+      <h2>Simple pricing</h2>
+      <span class="mono">Fig. 02 — Schedule / No per-seat theater</span>
+    </div>
+    <div class="price-grid">
+      <div class="price-col">
+        <p class="price-name mono">Starter</p>
+        <p class="price-amount">$0</p>
+        <p class="price-per mono">per month</p>
+        <div style="height:22px"></div>
+        <p class="price-feature">One project</p>
+        <p class="price-feature">10k events / month</p>
+        <p class="price-feature">7-day retention</p>
+        <button class="cta-solid price-cta">Get started</button>
+      </div>
+      <div class="price-col featured">
+        <p class="price-name mono">Pro — most popular</p>
+        <p class="price-amount">$29</p>
+        <p class="price-per mono">per month</p>
+        <div style="height:22px"></div>
+        <p class="price-feature">Ten projects</p>
+        <p class="price-feature">500k events / month</p>
+        <p class="price-feature">Unlimited retention</p>
+        <p class="price-feature">Session replay</p>
+        <button class="cta-solid price-cta">Start 14-day trial</button>
+      </div>
+      <div class="price-col">
+        <p class="price-name mono">Scale</p>
+        <p class="price-amount">$99</p>
+        <p class="price-per mono">per month</p>
+        <div style="height:22px"></div>
+        <p class="price-feature">Unlimited projects</p>
+        <p class="price-feature">5M events / month</p>
+        <p class="price-feature">SSO & audit log</p>
+        <p class="price-feature">Priority support</p>
+        <button class="cta-solid price-cta">Contact sales</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta">
+  <p class="kicker mono" style="color:var(--signal)">▪ No credit card. No data team.</p>
+  <h2>Stop guessing. Start knowing.</h2>
+  <button class="cta-solid">Start your free trial →</button>
+</section>
+
+<footer>
+  <div class="container footer-inner">
+    <div class="mono">© 2026 Skittie Analytics — GS-014</div>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Status</a>
+      <a href="#">Journal</a>
+    </div>
+    <div class="mono">Set in Archivo & IBM Plex Mono</div>
+  </div>
+</footer>
+
+</body>
+</html>
