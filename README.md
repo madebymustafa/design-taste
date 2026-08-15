@@ -121,6 +121,10 @@ design-taste/
 
 Before/after pairs from real agent runs — [gallery/](gallery/). Add your own; it's the best PR you can make.
 
+And the whole family on one board — same brief, ten identities:
+
+![One prompt, ten identities — the design-taste genre packs on a single brief](gallery/launch-grid.png)
+
 ## License
 
 MIT. Use it, fork it, sell the output — just don't claim you made the taste.
