@@ -127,7 +127,7 @@ And the whole family on one board — same brief, ten identities:
 
 ## License
 
-MIT. Fork it, remix it, ship with it — that's the whole point. If you make something people notice, tell them how.
+MIT — use it, fork it, ship it.
 
 ---
 
