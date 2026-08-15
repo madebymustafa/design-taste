@@ -10,9 +10,9 @@ This repo puts it back: **24 skills** (and counting) that teach your agent to re
 
 ---
 
-[![The same brief, built twice — a default agent, then the cinematic-motion skill. Click to play the 39s film](media/cinematic-motion-poster.png)](https://raw.githubusercontent.com/madebymustafa/design-taste/main/media/cinematic-motion-demo.mp4)
+![The same brief, built twice — a default agent, then the cinematic-motion skill.](media/cinematic-motion-demo.gif)
 
-*The same brief, built twice: a default agent, then the `cinematic-motion` skill. 39 seconds — [▶ watch the film (mp4, 2.1 MB)](https://raw.githubusercontent.com/madebymustafa/design-taste/main/media/cinematic-motion-demo.mp4)*
+*The same brief, built twice: a default agent, then the `cinematic-motion` skill. The trailer above loops the full arc — the complete 39s film is [▶ one click away (mp4, 2.1 MB)](https://raw.githubusercontent.com/madebymustafa/design-taste/main/media/cinematic-motion-demo.mp4).*
 
 ---
 
