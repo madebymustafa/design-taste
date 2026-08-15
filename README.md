@@ -43,7 +43,13 @@ Five seconds, no tutorial needed. That's the whole pitch.
 | [`japanese-minimal`](skills/japanese-minimal/SKILL.md) | Wabi-sabi: rice paper, sumi ink, one seal-red hanko, mincho serif, negative space as the layout, one vertical text element | [`japanese-minimal.html`](examples/japanese-minimal.html) |
 | [`neo-brutalism`](skills/neo-brutalism/SKILL.md) | Loud consumer web: every element ink-bordered, 6px hard shadows, one hot + one cool accent, chunky pills, confident copy | [`neo-brutalism.html`](examples/neo-brutalism.html) |
 | [`corporate-trust`](skills/corporate-trust/SKILL.md) | Trust-first enterprise: white, one deep-blue accent, system type, evidence tables, compliance chips, restraint as the brand | [`corporate-trust.html`](examples/corporate-trust.html) |
-| [`cinematic-motion`](skills/cinematic-motion/SKILL.md) | Site-of-the-day: the page as a film on studio print — paper canvas, ink type, one electric blue, alternating scene canvases, live product screen, scrubbed index counter, drag carousel, roadmap pin | [`cinematic-motion.html`](examples/cinematic-motion.html) · [watch it](media/cinematic-motion-demo.mp4) |
+| [`cinematic-motion`](skills/cinematic-motion/SKILL.md) | Site-of-the-day: the page as a film on studio print — paper canvas, ink type, one electric blue, alternating scene canvases, live product screen, scrubbed index counter, drag carousel, roadmap pin | [`cinematic-motion.html`](examples/cinematic-motion.html) |
+
+The flagship demo on film — the same brief captured twice: default agent output, then the `cinematic-motion` skill:
+
+<video src="media/cinematic-motion-demo.mp4" controls muted playsinline poster="media/cinematic-motion-poster.png"></video>
+
+`media/cinematic-motion-demo.mp4` — 39s, before → after, one cut.
 
 ### Craft skills (reference-grade rules, stack on any pack)
 
